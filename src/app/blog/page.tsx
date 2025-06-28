@@ -15,7 +15,7 @@ const blogPosts = [
     imageUrl: "https://placehold.co/600x400.png",
     category: "Guías de Preparación",
     date: "20 Julio, 2024",
-    author: "Equipo Aroma Origins",
+    author: "Equipo Café Regional",
   },
   {
     id: "2",
@@ -25,21 +25,21 @@ const blogPosts = [
     imageUrl: "https://placehold.co/600x400.png",
     category: "Orígenes del Café",
     date: "15 Julio, 2024",
-    author: "Equipo Aroma Origins",
+    author: "Equipo Café Regional",
   },
   {
     id: "3",
     slug: "sostenibilidad-cultivo-cafe",
     title: "Sostenibilidad en el Cultivo del Café: Nuestro Compromiso",
-    excerpt: "Conoce cómo en Aroma Origins trabajamos por un futuro más verde y justo para nuestros caficultores y el planeta...",
+    excerpt: "Conoce cómo en Café Regional trabajamos por un futuro más verde y justo para nuestros caficultores y el planeta...",
     imageUrl: "https://placehold.co/600x400.png",
     category: "Sostenibilidad",
     date: "10 Julio, 2024",
-    author: "Equipo Aroma Origins",
+    author: "Equipo Café Regional",
   },
 ];
 
-const categories = ["Guías de Preparación", "Orígenes del Café", "Sostenibilidad", "Noticias de Aroma Origins"];
+const categories = ["Guías de Preparación", "Orígenes del Café", "Sostenibilidad", "Noticias de Café Regional"];
 
 export default function BlogPage() {
   return (

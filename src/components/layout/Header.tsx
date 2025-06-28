@@ -45,7 +45,7 @@ export default function Header() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2">
           <Shirt className="h-7 w-7 text-primary" /> {/* Using Shirt as a placeholder for a coffee/logo icon */}
-          <span className="font-lora text-2xl font-bold text-primary">Aroma Origins</span>
+          <span className="font-lora text-2xl font-bold text-primary">Café Regional</span>
         </Link>
 
         <nav className="hidden md:flex gap-6">
@@ -83,7 +83,7 @@ export default function Header() {
                 <div className="flex items-center justify-between p-4 border-b">
                   <Link href="/" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
                     <Shirt className="h-7 w-7 text-primary" />
-                    <span className="font-lora text-xl font-bold text-primary">Aroma Origins</span>
+                    <span className="font-lora text-xl font-bold text-primary">Café Regional</span>
                   </Link>
                   <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(false)} aria-label="Cerrar menú">
                     <X className="h-6 w-6" />
@@ -93,7 +93,7 @@ export default function Header() {
                   <NavLinksComponent mobile={true} />
                 </nav>
                 <div className="p-4 border-t">
-                  <p className="text-center text-sm text-muted-foreground">© {new Date().getFullYear()} Aroma Origins</p>
+                  <p className="text-center text-sm text-muted-foreground">© {new Date().getFullYear()} Café Regional</p>
                 </div>
               </div>
             </SheetContent>

@@ -13,7 +13,7 @@ export default function RegisterPage() {
         <CardHeader className="text-center">
           <UserPlus className="mx-auto h-12 w-12 text-primary mb-4" />
           <CardTitle className="font-lora text-3xl">Crear Cuenta</CardTitle>
-          <CardDescription>Únete a la familia Aroma Origins y disfruta de beneficios exclusivos.</CardDescription>
+          <CardDescription>Únete a la familia Café Regional y disfruta de beneficios exclusivos.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-2">

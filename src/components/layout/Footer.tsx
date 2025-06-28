@@ -11,7 +11,7 @@ export default function Footer() {
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div>
-            <h3 className="font-lora text-xl font-semibold mb-4 text-primary">Aroma Origins</h3>
+            <h3 className="font-lora text-xl font-semibold mb-4 text-primary">Café Regional</h3>
             <p className="text-sm mb-4">
               Descubre la riqueza y tradición del café colombiano, directo de sus orígenes a tu taza.
             </p>
@@ -56,7 +56,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 pt-8 border-t border-border text-center text-sm">
-          <p>&copy; {new Date().getFullYear()} Aroma Origins. Todos los derechos reservados.</p>
+          <p>&copy; {new Date().getFullYear()} Café Regional. Todos los derechos reservados.</p>
           <p className="text-muted-foreground">Diseñado con pasión por el café colombiano.</p>
         </div>
       </div>

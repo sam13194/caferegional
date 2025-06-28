@@ -48,7 +48,7 @@ export default function ContactPage() {
                 <Mail className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
                 <div>
                   <h3 className="font-semibold">Correo Electrónico</h3>
-                  <a href="mailto:hola@aromaorigins.com" className="text-muted-foreground hover:text-primary">hola@aromaorigins.com</a>
+                  <a href="mailto:hola@caferegional.com" className="text-muted-foreground hover:text-primary">hola@caferegional.com</a>
                 </div>
               </div>
               <div className="flex items-start gap-3">

@@ -31,7 +31,7 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-black/50 z-10"></div>
         <div className="relative z-20 p-6 space-y-6 max-w-3xl">
           <h1 className="font-lora text-4xl md:text-6xl font-bold text-white leading-tight">
-            Aroma Origins: El Auténtico Sabor de Colombia
+            Café Regional: El Auténtico Sabor de Colombia
           </h1>
           <p className="text-lg md:text-xl text-gray-200">
             Descubre la riqueza y tradición de Ragonvalia, Arboledas y Durania en cada sorbo.
@@ -97,7 +97,7 @@ export default function HomePage() {
 
       {/* Newsletter Signup Section */}
       <section className="py-12 text-center bg-secondary rounded-lg shadow-inner">
-        <h2 className="font-lora text-3xl font-bold mb-3 text-primary">Únete a la Familia Aroma Origins</h2>
+        <h2 className="font-lora text-3xl font-bold mb-3 text-primary">Únete a la Familia Café Regional</h2>
         <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
           Recibe ofertas exclusivas, noticias de nuevas cosechas y consejos de preparación. ¡10% de descuento en tu primera compra!
         </p>

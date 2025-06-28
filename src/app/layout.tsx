@@ -21,7 +21,7 @@ const openSans = Open_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'Aroma Origins - Café Regional Colombiano',
+  title: 'Café Regional - Café de Origen Colombiano',
   description: 'Descubre el auténtico sabor del café colombiano de las regiones de Ragonvalia, Arboledas y Durania.',
   icons: {
     icon: '/favicon.ico', // Placeholder, assuming a favicon might be added later

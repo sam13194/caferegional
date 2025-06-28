@@ -12,7 +12,7 @@ export default function LoginPage() {
         <CardHeader className="text-center">
           <LogIn className="mx-auto h-12 w-12 text-primary mb-4" />
           <CardTitle className="font-lora text-3xl">Iniciar Sesión</CardTitle>
-          <CardDescription>Bienvenido de nuevo a Aroma Origins.</CardDescription>
+          <CardDescription>Bienvenido de nuevo a Café Regional.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-2">
