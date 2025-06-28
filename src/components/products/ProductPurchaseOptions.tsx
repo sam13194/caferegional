@@ -1,7 +1,7 @@
 "use client";
 
-import type { Product } from '@/types';
-import { useState } from 'react';
+import type { Product, ProductVariant } from '@/types';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -11,20 +11,33 @@ import { useToast } from "@/hooks/use-toast";
 
 interface ProductPurchaseOptionsProps {
   product: Product;
-  grindOptions: string[];
+  onPriceChange: (newPrice: number) => void;
 }
 
-export default function ProductPurchaseOptions({ product, grindOptions }: ProductPurchaseOptionsProps) {
+export default function ProductPurchaseOptions({ product, onPriceChange }: ProductPurchaseOptionsProps) {
   const [quantity, setQuantity] = useState(1);
-  const [selectedGrind, setSelectedGrind] = useState<string | undefined>(grindOptions.length > 0 ? grindOptions[0] : undefined);
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant>(product.variants[0]);
   const { addToCart } = useCart();
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (selectedVariant) {
+      onPriceChange(selectedVariant.price);
+    }
+  }, [selectedVariant, onPriceChange]);
+
+  const handleVariantChange = (variantSize: string) => {
+    const variant = product.variants.find(v => v.size === variantSize);
+    if (variant) {
+      setSelectedVariant(variant);
+    }
+  };
 
   const handleQuantityChange = (amount: number) => {
     setQuantity(prev => {
       const newQuantity = prev + amount;
       if (newQuantity < 1) return 1;
-      if (newQuantity > product.stock) return product.stock; // Prevent exceeding stock
+      if (newQuantity > product.stock) return product.stock;
       return newQuantity;
     });
   };
@@ -47,10 +60,10 @@ export default function ProductPurchaseOptions({ product, grindOptions }: Produc
         });
         return;
     }
-    addToCart(product, quantity, selectedGrind);
+    addToCart(product, quantity, selectedVariant);
     toast({
       title: "Producto añadido al carrito",
-      description: `${quantity}x ${product.name} ${selectedGrind ? `(${selectedGrind})` : ''} añadido.`,
+      description: `${quantity}x ${product.name} (${selectedVariant.size}) añadido.`,
     });
   };
   
@@ -61,20 +74,21 @@ export default function ProductPurchaseOptions({ product, grindOptions }: Produc
     });
   };
 
-
   return (
     <div className="space-y-6">
-      {/* Grind Options */}
-      {product.roastType.includes("Grano Entero") && grindOptions.length > 0 && ( // Assuming grind options are relevant if whole bean is an option
+      {/* Variant (Size) Options */}
+      {product.variants && product.variants.length > 1 && (
         <div>
-          <label htmlFor="grind-select" className="block text-sm font-medium text-foreground mb-1">Tipo de Molido:</label>
-          <Select value={selectedGrind} onValueChange={setSelectedGrind}>
-            <SelectTrigger id="grind-select" className="w-full md:w-2/3 bg-background">
-              <SelectValue placeholder="Selecciona un tipo de molido" />
+          <label htmlFor="variant-select" className="block text-sm font-medium text-foreground mb-1">Tamaño:</label>
+          <Select value={selectedVariant.size} onValueChange={handleVariantChange}>
+            <SelectTrigger id="variant-select" className="w-full md:w-2/3 bg-background">
+              <SelectValue placeholder="Selecciona un tamaño" />
             </SelectTrigger>
             <SelectContent>
-              {grindOptions.map(option => (
-                <SelectItem key={option} value={option}>{option}</SelectItem>
+              {product.variants.map(variant => (
+                <SelectItem key={variant.size} value={variant.size}>
+                  {variant.size} - ${variant.price.toLocaleString('es-CO')}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>

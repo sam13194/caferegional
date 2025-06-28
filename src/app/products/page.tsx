@@ -1,7 +1,6 @@
 import ProductCard from '@/components/products/ProductCard';
 import { products } from '@/data/products';
 import { regions } from '@/data/regions';
-import { GRIND_OPTIONS } from '@/data/products';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -30,19 +29,6 @@ export default function ProductsPage() {
               <div key={region.id} className="flex items-center space-x-2">
                 <Checkbox id={`region-${region.slug}`} />
                 <Label htmlFor={`region-${region.slug}`} className="text-sm font-normal">{region.name}</Label>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Grind Type Filter */}
-        <div>
-          <h3 className="font-semibold mb-2 text-foreground">Tipo de Molido</h3>
-          <div className="space-y-2">
-            {GRIND_OPTIONS.map(grind => (
-              <div key={grind} className="flex items-center space-x-2">
-                <Checkbox id={`grind-${grind.toLowerCase().replace(/\s+/g, '-')}`} />
-                <Label htmlFor={`grind-${grind.toLowerCase().replace(/\s+/g, '-')}`} className="text-sm font-normal">{grind}</Label>
               </div>
             ))}
           </div>

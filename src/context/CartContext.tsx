@@ -1,13 +1,13 @@
 "use client";
 
-import type { CartItem, Product } from '@/types';
+import type { CartItem, Product, ProductVariant } from '@/types';
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 interface CartContextType {
   cart: CartItem[];
-  addToCart: (product: Product, quantity: number, selectedGrind?: string) => void;
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  addToCart: (product: Product, quantity: number, selectedVariant: ProductVariant) => void;
+  removeFromCart: (cartItemId: string) => void;
+  updateQuantity: (cartItemId: string, quantity: number) => void;
   clearCart: () => void;
   getCartTotal: () => number;
   getItemCount: () => number;
@@ -30,31 +30,48 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [cart]);
 
-  const addToCart = (product: Product, quantity: number, selectedGrind?: string) => {
+  const addToCart = (product: Product, quantity: number, selectedVariant: ProductVariant) => {
     setCart(prevCart => {
-      const existingItemIndex = prevCart.findIndex(item => item.id === product.id && item.selectedGrind === selectedGrind);
+      // A unique ID for a cart item is the product ID plus the variant size
+      const cartItemId = `${product.id}-${selectedVariant.size}`;
+      const existingItemIndex = prevCart.findIndex(item => `${item.id}-${item.selectedVariant.size}` === cartItemId);
+
       if (existingItemIndex > -1) {
         const updatedCart = [...prevCart];
-        updatedCart[existingItemIndex].quantity += quantity;
-        if (updatedCart[existingItemIndex].quantity > product.stock) {
-             updatedCart[existingItemIndex].quantity = product.stock; // Cap at stock
+        const existingItem = updatedCart[existingItemIndex];
+        existingItem.quantity += quantity;
+        if (existingItem.quantity > product.stock) {
+             existingItem.quantity = product.stock; // Cap at stock
         }
         return updatedCart;
       } else {
-        return [...prevCart, { ...product, quantity: Math.min(quantity, product.stock), selectedGrind }];
+        const newCartItem: CartItem = {
+          id: product.id,
+          name: product.name,
+          slug: product.slug,
+          image: product.images[0],
+          stock: product.stock,
+          quantity: Math.min(quantity, product.stock),
+          selectedVariant: selectedVariant,
+        };
+        return [...prevCart, newCartItem];
       }
     });
   };
 
-  const removeFromCart = (productId: string) => {
-    setCart(prevCart => prevCart.filter(item => item.id !== productId));
+  const removeFromCart = (cartItemId: string) => {
+    setCart(prevCart => prevCart.filter(item => `${item.id}-${item.selectedVariant.size}` !== cartItemId));
   };
 
-  const updateQuantity = (productId: string, quantity: number) => {
+  const updateQuantity = (cartItemId: string, quantity: number) => {
     setCart(prevCart =>
-      prevCart.map(item =>
-        item.id === productId ? { ...item, quantity: Math.max(0, Math.min(quantity, item.stock)) } : item
-      ).filter(item => item.quantity > 0) // Remove if quantity is 0
+      prevCart.map(item => {
+        const currentCartId = `${item.id}-${item.selectedVariant.size}`;
+        if (currentCartId === cartItemId) {
+          return { ...item, quantity: Math.max(0, Math.min(quantity, item.stock)) }
+        }
+        return item;
+      }).filter(item => item.quantity > 0) // Remove if quantity is 0
     );
   };
 
@@ -63,13 +80,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const getCartTotal = () => {
-    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+    return cart.reduce((total, item) => total + item.selectedVariant.price * item.quantity, 0);
   };
   
   const getItemCount = () => {
     return cart.reduce((count, item) => count + item.quantity, 0);
   };
-
 
   return (
     <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart, getCartTotal, getItemCount }}>

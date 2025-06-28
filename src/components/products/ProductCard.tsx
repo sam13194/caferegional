@@ -18,14 +18,20 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { toast } = useToast();
 
   const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault(); // Prevent link navigation if card is wrapped in Link
+    event.preventDefault(); 
     event.stopPropagation();
-    addToCart(product, 1); // Assuming default grind or handle grind selection in quick view/product page
+    
+    const defaultVariant = product.variants[0];
+    if (!defaultVariant) return;
+
+    addToCart(product, 1, defaultVariant);
     toast({
       title: "Producto añadido",
-      description: `${product.name} ha sido añadido a tu carrito.`,
+      description: `${product.name} (${defaultVariant.size}) ha sido añadido a tu carrito.`,
     });
   };
+
+  const displayPrice = product.variants.length > 0 ? product.variants[0].price : product.price;
 
   return (
     <Card className="flex flex-col overflow-hidden h-full shadow-md hover:shadow-xl transition-shadow duration-300 rounded-lg group">
@@ -33,7 +39,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <Link href={`/products/${product.slug}`} passHref>
           <div className="aspect-[4/3] w-full relative overflow-hidden">
             <Image
-              src={product.imageUrl}
+              src={product.images[0]}
               alt={product.name}
               layout="fill"
               objectFit="cover"
@@ -65,7 +71,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <CardDescription className="text-sm text-foreground line-clamp-3 mb-2">{product.description}</CardDescription>
       </CardContent>
       <CardFooter className="p-4 pt-0 flex justify-between items-center">
-        <p className="text-xl font-semibold text-primary">${product.price.toLocaleString('es-CO')}</p>
+        <p className="text-xl font-semibold text-primary">${displayPrice.toLocaleString('es-CO')}</p>
         <Button size="sm" variant="default" onClick={handleAddToCart} className="group/cartbtn">
           <ShoppingCart className="mr-0 md:mr-2 h-4 w-4 transition-transform group-hover/cartbtn:scale-110" />
           <span className="hidden md:inline">Añadir</span>

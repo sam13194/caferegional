@@ -1,40 +1,44 @@
+"use client";
+
 import Image from 'next/image';
-import { products, GRIND_OPTIONS } from '@/data/products';
+import { products } from '@/data/products';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input'; // For quantity
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Star, ShoppingCart, Heart, MessageCircle, ChevronLeft, ChevronRight } from 'lucide-react';
-import ProductCard from '@/components/products/ProductCard'; // For related products
+import { Star, MessageCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import ProductCard from '@/components/products/ProductCard';
 import CoffeeRecommender from '@/components/ai/CoffeeRecommender';
 import ProductPurchaseOptions from '@/components/products/ProductPurchaseOptions';
+import { useState, useEffect } from 'react';
+import type { Product } from '@/types';
 
-export async function generateStaticParams() {
-  return products.map((product) => ({
-    slug: product.slug,
-  }));
+// We need a client component to manage the dynamic price state
+function findProductBySlug(slug: string): Product | undefined {
+  return products.find(p => p.slug === slug);
 }
 
-interface ProductPageProps {
-  params: { slug: string };
-}
+export default function ProductPage({ params }: { params: { slug: string } }) {
+  const [product, setProduct] = useState<Product | null>(null);
+  const [displayPrice, setDisplayPrice] = useState<number>(0);
+  
+  useEffect(() => {
+    const foundProduct = findProductBySlug(params.slug);
+    if (foundProduct) {
+      setProduct(foundProduct);
+      setDisplayPrice(foundProduct.variants[0]?.price ?? foundProduct.price);
+    }
+  }, [params.slug]);
 
-export default async function ProductPage({ params }: ProductPageProps) {
-  const product = products.find(p => p.slug === params.slug);
 
   if (!product) {
-    return <div className="text-center py-10">Producto no encontrado.</div>;
+    return <div className="text-center py-10">Producto no encontrado o cargando...</div>;
   }
 
   const relatedProducts = products.filter(p => p.region === product.region && p.id !== product.id).slice(0, 3);
 
-  // Mock reviews
   const reviews = [
     { id: '1', userName: 'Carlos M.', rating: 5, comment: '¡Excelente café, aroma y sabor inigualables!', date: '2024-07-15' },
     { id: '2', userName: 'Lucía F.', rating: 4, comment: 'Muy bueno, aunque esperaba un poco más de intensidad.', date: '2024-07-10' },
   ];
-  const averageRating = reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length;
-
 
   return (
     <div className="space-y-12">
@@ -43,13 +47,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <div className="space-y-4">
           <div className="relative aspect-square rounded-lg overflow-hidden shadow-lg bg-muted">
             <Image 
-              src={product.images && product.images.length > 0 ? product.images[0] : product.imageUrl} 
+              src={product.images[0]} 
               alt={product.name} 
               layout="fill" 
               objectFit="cover"
               data-ai-hint="coffee product detail"
             />
-             {/* Basic gallery controls placeholder */}
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
               <Button variant="outline" size="icon" className="bg-background/70 hover:bg-background"><ChevronLeft size={18}/></Button>
               <Button variant="outline" size="icon" className="bg-background/70 hover:bg-background"><ChevronRight size={18}/></Button>
@@ -79,10 +82,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
               </>
             )}
           </div>
-          <p className="text-2xl font-semibold text-foreground">${product.price.toLocaleString('es-CO')}</p>
+          <p className="text-2xl font-semibold text-foreground">${displayPrice.toLocaleString('es-CO')}</p>
           <p className="text-muted-foreground leading-relaxed">{product.description}</p>
           
-          <ProductPurchaseOptions product={product} grindOptions={GRIND_OPTIONS} />
+          <ProductPurchaseOptions product={product} onPriceChange={setDisplayPrice} />
 
           <div className="pt-4 border-t">
             <p className="text-sm text-muted-foreground"><span className="font-semibold text-foreground">Región:</span> {product.region}</p>
@@ -146,7 +149,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <h2 className="font-lora text-2xl font-bold mb-6 text-primary text-center">Te podría interesar también...</h2>
         <CoffeeRecommender 
           currentProduct={product} 
-          // Mock purchase history and preferences for now
           userPurchaseHistory={products.slice(0,2).map(p => p.name).join(', ')} 
           userPreferences={`Le gustan los cafés de la región ${product.region} con intensidad ${product.intensity > 3 ? 'alta' : 'media-baja'}.`}
         />

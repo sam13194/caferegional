@@ -31,39 +31,42 @@ export default function CartPage() {
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Cart Items */}
         <div className="lg:col-span-2 space-y-6">
-          {cart.map(item => (
-            <div key={item.id + (item.selectedGrind || '')} className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 border rounded-lg bg-card shadow-sm">
-              <div className="relative w-24 h-24 sm:w-20 sm:h-20 rounded-md overflow-hidden shrink-0 bg-muted">
-                <Image src={item.imageUrl} alt={item.name} layout="fill" objectFit="cover" data-ai-hint="coffee product bag" />
-              </div>
-              <div className="flex-grow">
-                <Link href={`/products/${item.slug}`} className="hover:underline">
-                  <h2 className="text-lg font-semibold text-foreground">{item.name}</h2>
-                </Link>
-                <p className="text-sm text-muted-foreground">{item.region}</p>
-                {item.selectedGrind && <p className="text-xs text-muted-foreground">Molido: {item.selectedGrind}</p>}
-                <p className="text-sm font-medium text-primary mt-1 sm:hidden">${item.price.toLocaleString('es-CO')}</p>
-              </div>
-              <div className="flex items-center gap-2 w-max border rounded-md p-1">
-                <Button variant="ghost" size="icon" onClick={() => updateQuantity(item.id, item.quantity - 1)} disabled={item.quantity <= 1} className="h-7 w-7">
-                  <Minus className="h-4 w-4" />
+          {cart.map(item => {
+            const cartItemId = `${item.id}-${item.selectedVariant.size}`;
+            return (
+              <div key={cartItemId} className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 border rounded-lg bg-card shadow-sm">
+                <div className="relative w-24 h-24 sm:w-20 sm:h-20 rounded-md overflow-hidden shrink-0 bg-muted">
+                  <Image src={item.image} alt={item.name} layout="fill" objectFit="cover" data-ai-hint="coffee product bag" />
+                </div>
+                <div className="flex-grow">
+                  <Link href={`/products/${item.slug}`} className="hover:underline">
+                    <h2 className="text-lg font-semibold text-foreground">{item.name}</h2>
+                  </Link>
+                  <p className="text-sm text-muted-foreground">{item.region}</p>
+                  <p className="text-xs text-muted-foreground">Tamaño: {item.selectedVariant.size}</p>
+                  <p className="text-sm font-medium text-primary mt-1 sm:hidden">${item.selectedVariant.price.toLocaleString('es-CO')}</p>
+                </div>
+                <div className="flex items-center gap-2 w-max border rounded-md p-1">
+                  <Button variant="ghost" size="icon" onClick={() => updateQuantity(cartItemId, item.quantity - 1)} disabled={item.quantity <= 1} className="h-7 w-7">
+                    <Minus className="h-4 w-4" />
+                  </Button>
+                  <Input 
+                    type="number" 
+                    value={item.quantity} 
+                    readOnly 
+                    className="w-10 h-7 text-center border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 p-0"
+                  />
+                  <Button variant="ghost" size="icon" onClick={() => updateQuantity(cartItemId, item.quantity + 1)} disabled={item.quantity >= item.stock} className="h-7 w-7">
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+                <p className="text-md font-semibold text-primary hidden sm:block min-w-[80px] text-right">${(item.selectedVariant.price * item.quantity).toLocaleString('es-CO')}</p>
+                <Button variant="ghost" size="icon" onClick={() => removeFromCart(cartItemId)} className="text-destructive hover:text-destructive/80 h-7 w-7">
+                  <Trash2 className="h-4 w-4" />
                 </Button>
-                <Input 
-                  type="number" 
-                  value={item.quantity} 
-                  readOnly 
-                  className="w-10 h-7 text-center border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 p-0"
-                />
-                <Button variant="ghost" size="icon" onClick={() => updateQuantity(item.id, item.quantity + 1)} disabled={item.quantity >= item.stock} className="h-7 w-7">
-                  <Plus className="h-4 w-4" />
-                </Button>
               </div>
-              <p className="text-md font-semibold text-primary hidden sm:block min-w-[80px] text-right">${(item.price * item.quantity).toLocaleString('es-CO')}</p>
-              <Button variant="ghost" size="icon" onClick={() => removeFromCart(item.id)} className="text-destructive hover:text-destructive/80 h-7 w-7">
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </div>
-          ))}
+            )
+          })}
         </div>
 
         {/* Order Summary */}
