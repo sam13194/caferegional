@@ -20,18 +20,19 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="relative h-[60vh] md:h-[70vh] flex items-center justify-center text-center rounded-lg overflow-hidden shadow-xl">
         <Image
-          src="https://i.postimg.cc/4mv4g4J2/image-3.png"
-          alt="Cultivos de café colombiano"
+          src="https://i.postimg.cc/25zrWDjm/image-4.png"
+          alt="Manos recolectando cerezas de café maduras"
           layout="fill"
           objectFit="cover"
           className="z-0"
           priority
         />
+        <div className="absolute inset-0 bg-black/30" />
         <div className="relative z-10 p-6 space-y-6 max-w-3xl">
-          <h1 className="font-lora text-4xl md:text-6xl font-bold text-white leading-tight">
+          <h1 className="font-lora text-4xl md:text-6xl font-bold text-white leading-tight drop-shadow-md">
             Café Regional: El Auténtico Sabor de Colombia
           </h1>
-          <p className="text-lg md:text-xl text-gray-200">
+          <p className="text-lg md:text-xl text-gray-200 drop-shadow-md">
             Descubre la riqueza y tradición de Ragonvalia, Arboledas y Durania en cada sorbo.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
