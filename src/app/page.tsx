@@ -20,13 +20,12 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="relative h-[60vh] md:h-[70vh] flex items-center justify-center text-center rounded-lg overflow-hidden shadow-xl">
         <Image
-          src="https://placehold.co/1600x900.png"
+          src="https://i.postimg.cc/4mv4g4J2/image-3.png"
           alt="Cultivos de café colombiano"
           layout="fill"
           objectFit="cover"
           className="z-0"
           priority
-          data-ai-hint="coffee plantation landscape"
         />
         <div className="absolute inset-0 bg-black/50 z-10"></div>
         <div className="relative z-20 p-6 space-y-6 max-w-3xl">
