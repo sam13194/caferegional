@@ -41,7 +41,7 @@ export const products: Product[] = [
     longDescription: 'Desde el corazón de Arboledas, este café premium ofrece una experiencia robusta con un cuerpo pronunciado y deliciosas notas a chocolate oscuro y nueces. Perfecto para quienes buscan un café con carácter.',
     price: 28000,
     images: [
-        'https://placehold.co/800x600.png',
+        'https://i.postimg.cc/9QNzc0tK/IMG-20250629-134401.png',
         'https://placehold.co/800x600.png',
     ],
     region: 'Arboledas',
