@@ -1,11 +1,19 @@
 "use client";
 
 import Link from 'next/link';
-import { Shirt, Search, User, ShoppingCart, Menu, X } from 'lucide-react';
+import { Shirt, Search, User, ShoppingCart, Menu, X, LayoutDashboard, LogOut, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useState, useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const navLinks = [
   { href: '/regions', label: 'Nuestras Regiones' },
@@ -56,11 +64,42 @@ export default function Header() {
           <Button variant="ghost" size="icon" aria-label="Buscar">
             <Search className="h-5 w-5" />
           </Button>
-          <Link href="/account" passHref>
-            <Button variant="ghost" size="icon" aria-label="Cuenta de usuario">
-              <User className="h-5 w-5" />
-            </Button>
-          </Link>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" aria-label="Cuenta de usuario">
+                <User className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link href="/account" className="cursor-pointer">
+                  <LayoutDashboard className="mr-2 h-4 w-4" />
+                  <span>Panel Principal</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/account/orders" className="cursor-pointer">
+                  <ShoppingBag className="mr-2 h-4 w-4" />
+                  <span>Mis Pedidos</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/account/profile" className="cursor-pointer">
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Detalles de Cuenta</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer">
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Cerrar Sesión</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <Link href="/cart" passHref>
             <Button variant="ghost" size="icon" aria-label="Carrito de compras" className="relative">
               <ShoppingCart className="h-5 w-5" />
