@@ -28,10 +28,10 @@ export default function HomePage() {
           priority
         />
         <div className="relative z-10 p-6 space-y-6 max-w-3xl">
-          <h1 className="font-lora text-4xl md:text-6xl font-bold text-white leading-tight [text-shadow:2px_2px_4px_rgba(0,0,0,0.6)]">
+          <h1 className="font-lora text-4xl md:text-6xl font-bold text-white leading-tight">
             Café Regional: El Auténtico Sabor de Colombia
           </h1>
-          <p className="text-lg md:text-xl text-gray-200 [text-shadow:1px_1px_3px_rgba(0,0,0,0.6)]">
+          <p className="text-lg md:text-xl text-gray-200">
             Descubre la riqueza y tradición de Ragonvalia, Arboledas y Durania en cada sorbo.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
