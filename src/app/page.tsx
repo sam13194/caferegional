@@ -27,7 +27,7 @@ export default function HomePage() {
           className="z-0"
           priority
         />
-        <div className="absolute inset-0 bg-black/50 z-10"></div>
+        <div className="absolute inset-0 bg-black/30 z-10"></div>
         <div className="relative z-20 p-6 space-y-6 max-w-3xl">
           <h1 className="font-lora text-4xl md:text-6xl font-bold text-white leading-tight">
             Café Regional: El Auténtico Sabor de Colombia
