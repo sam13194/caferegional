@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import { Shirt, Search, User, ShoppingCart, Menu, X, LayoutDashboard, LogOut, ShoppingBag } from 'lucide-react';
+import { Search, User, ShoppingCart, Menu, X, LayoutDashboard, LogOut, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useState, useEffect } from 'react';
@@ -14,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { LogoIcon } from '@/components/icons/LogoIcon';
 
 const navLinks = [
   { href: '/regions', label: 'Nuestras Regiones' },
@@ -52,7 +53,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2">
-          <Shirt className="h-7 w-7 text-primary" /> {/* Using Shirt as a placeholder for a coffee/logo icon */}
+          <LogoIcon className="h-7 w-7 text-primary" />
           <span className="font-lora text-2xl font-bold text-primary">Café Regional</span>
         </Link>
 
@@ -121,7 +122,7 @@ export default function Header() {
               <div className="flex flex-col h-full">
                 <div className="flex items-center justify-between p-4 border-b">
                   <Link href="/" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Shirt className="h-7 w-7 text-primary" />
+                    <LogoIcon className="h-7 w-7 text-primary" />
                     <span className="font-lora text-xl font-bold text-primary">Café Regional</span>
                   </Link>
                   <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(false)} aria-label="Cerrar menú">
