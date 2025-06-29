@@ -44,6 +44,8 @@ export interface Region {
   imageUrl: string | StaticImageData;
   mapHighlightPath?: string;
   slug: string;
+  lat: number;
+  lng: number;
 }
 
 export interface Testimonial {

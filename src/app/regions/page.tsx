@@ -1,6 +1,6 @@
 import RegionCard from '@/components/ui/RegionCard';
 import { regions } from '@/data/regions';
-import Image from 'next/image';
+import RegionsMap from '@/components/regions/RegionsMap';
 
 export default function RegionsPage() {
   return (
@@ -12,21 +12,10 @@ export default function RegionsPage() {
         </p>
       </header>
 
-      {/* Placeholder for Interactive Map */}
+      {/* Interactive Map */}
       <section className="mb-12">
-        <div className="relative h-64 md:h-96 w-full bg-muted rounded-lg shadow-md overflow-hidden">
-          <Image 
-            src="https://placehold.co/1200x400.png" 
-            alt="Mapa de regiones cafeteras de Colombia" 
-            layout="fill" 
-            objectFit="cover"
-            data-ai-hint="colombia map coffee"
-          />
-          <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-            <p className="text-white text-2xl font-semibold p-4 bg-black/50 rounded">
-              Mapa Interactivo (Próximamente)
-            </p>
-          </div>
+        <div className="relative h-96 w-full bg-muted rounded-lg shadow-md overflow-hidden">
+          <RegionsMap regions={regions} />
         </div>
         <p className="text-center text-sm text-muted-foreground mt-2">
           Visualiza nuestras regiones productoras y explora sus características únicas.
