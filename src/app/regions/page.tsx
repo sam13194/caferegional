@@ -1,6 +1,16 @@
 import RegionCard from '@/components/ui/RegionCard';
 import { regions } from '@/data/regions';
-import RegionsMap from '@/components/regions/RegionsMap';
+import dynamic from 'next/dynamic';
+
+const RegionsMap = dynamic(() => import('@/components/regions/RegionsMap'), {
+  ssr: false,
+  loading: () => (
+      <div className="flex items-center justify-center h-full bg-muted">
+          <p className="text-muted-foreground">Cargando mapa...</p>
+      </div>
+  ),
+});
+
 
 export default function RegionsPage() {
   return (
