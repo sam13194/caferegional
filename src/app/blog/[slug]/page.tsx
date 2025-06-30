@@ -78,7 +78,7 @@ const allPosts = [
         slug: "sostenibilidad-cultivo-cafe",
         title: "Sostenibilidad en el Cultivo del Café: Nuestro Compromiso",
         excerpt: "Conoce cómo en Café Regional trabajamos por un futuro más verde y justo para nuestros caficultores y el planeta.",
-        imageUrl: "https://placehold.co/800x600.png",
+        imageUrl: "https://i.postimg.cc/pdR2xmsY/DALL-E-2025-02-11-17-47-59-Create-a-coffee-label-design-featuring-the-name-CAF-REGIONAL-ARBOLEDA.webp",
         category: "Sostenibilidad",
         date: "10 Julio, 2024",
         author: {
