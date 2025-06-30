@@ -1,8 +1,13 @@
+
 "use client";
 
 import RegionCard from '@/components/ui/RegionCard';
 import { regions } from '@/data/regions';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from '@/components/ui/button';
+import { Globe } from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image';
 
 const regionViews = {
   ragonvalia: "https://earth.google.com/web/search/Ragonvalia,+Norte+de+Santander/@7.58127154,-72.4762402,1559.49161557a,2478.9688543d,35y,-0.00047692h,76.9989825t,359.99999864r/data=CiwiJgokCXHIIP1TmR5AER_zBV-Eix5AGU1hcN0YMlLAIdvnVbPYM1LAQgIIAUICCABKDQj___________8BEAA",
@@ -21,7 +26,7 @@ export default function RegionsPage() {
         </p>
       </header>
 
-      {/* Embedded Google Earth Views */}
+      {/* Google Earth Views section */}
       <section className="mb-12">
         <Tabs defaultValue="ragonvalia" className="w-full">
           <TabsList className="grid w-full grid-cols-3 bg-muted p-1 rounded-lg">
@@ -31,23 +36,34 @@ export default function RegionsPage() {
           </TabsList>
           {regions.map(region => (
             <TabsContent key={region.slug} value={region.slug}>
-              <div className="relative h-96 lg:h-[500px] w-full bg-muted rounded-lg shadow-md overflow-hidden mt-2">
-                <iframe
-                  src={regionViews[region.slug as keyof typeof regionViews]}
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title={`Vista de ${region.name} en Google Earth`}
-                ></iframe>
+              <div className="relative h-96 lg:h-[500px] w-full bg-muted rounded-lg shadow-md overflow-hidden mt-2 flex flex-col items-center justify-center text-center p-4">
+                  <Image 
+                    src={region.imageUrl} 
+                    alt={`Paisaje de ${region.name}`}
+                    layout="fill"
+                    objectFit="cover"
+                    className="z-0"
+                    data-ai-hint="coffee landscape region specific"
+                  />
+                  <div className="absolute inset-0 bg-black/50 backdrop-blur-sm z-0"></div>
+                  <div className="relative z-10 text-white">
+                      <h3 className="font-lora text-3xl font-bold mb-4">Explora {region.name}</h3>
+                      <p className="mb-6 max-w-md mx-auto text-gray-200">
+                        Descubre la geografía única que da a nuestro café su sabor distintivo. Abre una vista interactiva de la región en Google Earth.
+                      </p>
+                      <Button asChild size="lg">
+                        <Link href={regionViews[region.slug as keyof typeof regionViews]} target="_blank" rel="noopener noreferrer">
+                          <Globe className="mr-2 h-5 w-5"/>
+                          Ver {region.name} en Google Earth
+                        </Link>
+                      </Link>
+                  </div>
               </div>
             </TabsContent>
           ))}
         </Tabs>
         <p className="text-center text-sm text-muted-foreground mt-4">
-          Selecciona una región para explorar su geografía en Google Earth.
+          Selecciona una región para explorar su geografía.
         </p>
       </section>
 
