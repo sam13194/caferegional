@@ -22,11 +22,11 @@ export default function AboutPage() {
         </div>
         <div className="relative h-80 w-full rounded-lg overflow-hidden shadow-xl">
           <Image 
-            src="https://placehold.co/800x600.png" 
+            src="https://i.postimg.cc/pdR2xmsY/DALL-E-2025-02-11-17-47-59-Create-a-coffee-label-design-featuring-the-name-CAF-REGIONAL-ARBOLEDA.webp" 
             alt="Equipo de Café Regional o caficultores" 
             layout="fill" 
             objectFit="cover"
-            data-ai-hint="coffee team work"
+            data-ai-hint="coffee label"
           />
         </div>
       </section>
