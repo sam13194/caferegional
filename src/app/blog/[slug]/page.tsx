@@ -5,20 +5,22 @@ import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { notFound } from "next/navigation";
 
-// Mock data, in a real app this would be fetched based on slug
-const mockPost = {
-    slug: "como-preparar-cafe-de-olla",
-    title: "El Secreto de la Abuela: Cómo Preparar un Auténtico Café de Olla",
-    excerpt: "Redescubre el sabor tradicional del campo con esta guía para preparar un café de olla especiado y reconfortante.",
-    imageUrl: "https://i.postimg.cc/5tLn50JG/image-6.png",
-    category: "Recetas Tradicionales",
-    date: "20 Julio, 2024",
-    author: {
-        name: "Equipo Café Regional",
-        avatarUrl: "https://placehold.co/100x100.png"
-    },
-    content: `
+// In a real app, this data would come from a CMS or database
+const allPosts = [
+    {
+        slug: "como-preparar-cafe-de-olla",
+        title: "El Secreto de la Abuela: Cómo Preparar un Auténtico Café de Olla",
+        excerpt: "Redescubre el sabor tradicional del campo con esta guía para preparar un café de olla especiado y reconfortante.",
+        imageUrl: "https://i.postimg.cc/5tLn50JG/image-6.png",
+        category: "Recetas Tradicionales",
+        date: "20 Julio, 2024",
+        author: {
+            name: "Equipo Café Regional",
+            avatarUrl: "https://placehold.co/100x100.png"
+        },
+        content: `
 <p>El café de olla es más que una bebida; es un abrazo cálido que nos recuerda a las cocinas de las abuelas, al campo y a las tradiciones más arraigadas. Su preparación artesanal en una olla de barro le confiere un sabor único e inconfundible. ¡Aprende a prepararlo y llena tu hogar con su delicioso aroma!</p>
 <p>Esta receta tradicional es perfecta para mañanas frías, tardes de lluvia o para compartir después de una buena comida.</p>
 <h3 class="font-lora text-xl font-semibold mt-6 mb-2">Ingredientes que Necesitarás</h3>
@@ -41,17 +43,49 @@ const mockPost = {
 </ol>
 <p>¡Y listo! Disfruta de un café de olla lleno de tradición y sabor. Puedes ajustar la cantidad de piloncillo y especias a tu gusto.</p>
     `
-};
+    },
+    {
+        slug: "ragonvalia-cafe-especialidad",
+        title: "Ragonvalia: El Pequeño Pueblo Colombiano que Conquistó el Mundo con su Café de Especialidad",
+        excerpt: "En el corazón de Norte de Santander, Colombia, un pequeño municipio llamado Ragonvalia está redefiniendo el panorama del café de especialidad.",
+        imageUrl: "https://i.postimg.cc/PfPSfhVB/cafe-ragonvalia.jpg",
+        category: "Orígenes del Café",
+        date: "25 Julio, 2024",
+        author: {
+            name: "Equipo Café Regional",
+            avatarUrl: "https://placehold.co/100x100.png"
+        },
+        content: `
+<p>En el corazón de Norte de Santander, Colombia, un pequeño municipio llamado Ragonvalia está redefiniendo el panorama del café de especialidad. Lejos de ser un productor más, esta región ha emergido como un epicentro de calidad, impulsada por la visión y la dedicación de caficultores que han llevado sus granos a los escenarios internacionales más prestigiosos.</p>
+<h3 class="font-lora text-xl font-semibold mt-6 mb-2">La Historia de Domingo Torres: Fe, Piedra y Café Geisha</h3>
+<p>La narrativa de Ragonvalia no puede contarse sin la inspiradora historia de Domingo Torres, un caficultor de la Finca El Roble. Su viaje es un testimonio de perseverancia: desde sus inicios en Guapi, Cauca, hasta establecerse en Ragonvalia, donde, contra todo pronóstico y las advertencias de sus vecinos sobre la "tierra pura piedra", decidió apostar por el café.</p>
+<p>La clave de su éxito reside en varios factores. Primero, el terroir único de su Finca El Roble, ubicada a 1.920 metros sobre el nivel del mar (M.S.N.M.). Esta altitud es ideal para el café Arábica, permitiendo una maduración lenta que concentra azúcares y precursores del sabor. Además, Torres destaca la composición rocosa de su suelo, que retiene nutrientes y minerales esenciales para las plantas.</p>
+<p>La decisión más audaz de Torres fue cultivar la variedad Geisha, conocida mundialmente por su excepcional perfil en taza y alto valor de mercado. A pesar de las críticas iniciales de vecinos y expertos por su susceptibilidad a la roya, Torres, con su conocimiento, sabía que a más de 1.800 metros de altitud, la incidencia de esta enfermedad se reduce drásticamente. Sus métodos de procesamiento, aunque él los describe como "básicos" y "pura mano", son meticulosos: un proceso lavado con una fermentación precisa de 36 horas y secado en marquesina. Esta combinación de terroir, variedad y procesamiento artesanal es lo que ha catapultado su café a la élite.</p>
+<h3 class="font-lora text-xl font-semibold mt-6 mb-2">Un Perfil Sensorial Inolvidable</h3>
+<p>El café Geisha de Domingo Torres es una experiencia para los sentidos. Ha sido consistentemente elogiado por su equilibrio y complejidad. En el concurso "Colombia, Tierra de Diversidad", fue un "cuádruple ganador", reconocido como el mejor en Acidez, Cuerpo y Balance, además de ser coronado como el café "más exótico".</p>
+<p>Las notas de cata revelan un perfil vibrante: toques cítricos, frutos rojos y vainilla. Al beberlo, se perciben matices de romero y limoncillo, culminando en un persistente residual a lima. Su acidez jugosa y cuerpo sedoso contribuyen a una impresión general de armonía. Torres mismo insiste en que su café debe disfrutarse sin azúcar para apreciar plenamente sus cualidades inherentes.</p>
+<h3 class="font-lora text-xl font-semibold mt-6 mb-2">De Ragonvalia al Mundo: Premios y Precios Récord</h3>
+<p>El reconocimiento internacional del café de Ragonvalia, liderado por Domingo Torres, es innegable. En una subasta internacional en el marco de la Feria del Café del Nororiente Colombiano, su café alcanzó un precio histórico de 120.50 USD por libra, el más alto entre 27 lotes finalistas. Este lote récord fue adquirido por Koffee Kult, una empresa de Estados Unidos. Otro de sus lotes también logró un impresionante precio de 93.50 USD por libra en la misma subasta.</p>
+<p>Estos logros no son aislados. En una subasta anterior, su café alcanzó los 78 USD por libra, y ha sido consistentemente el productor con las ventas más altas a nivel nacional de 2021 a 2023. El café de Torres se exporta a mercados tan diversos como China, Corea del Sur, Taiwán, Estados Unidos, Bélgica y Canadá. Incluso en Colombia, la tostadora Amor Perfecto ha ofrecido ediciones limitadas de su café.</p>
+<p>Estos precios récord no solo son un motivo de orgullo, sino que se traducen directamente en "mejores ingresos y en prosperidad para las familias que los producen", demostrando el impacto económico transformador del café de especialidad.</p>
+<h3 class="font-lora text-xl font-semibold mt-6 mb-2">El Futuro Prometedor de la Caficultura en Ragonvalia</h3>
+<p>El futuro de la caficultura en Ragonvalia se vislumbra prometedor. La Gobernación de Norte de Santander ha invertido 15.100 millones de COP en el proyecto "Restauración de la Caficultura", buscando beneficiar a más de 3.400 caficultores y renovar 2.404 hectáreas. Además, el SENA ofrece un programa de "Técnico en Producción de Cafés Especiales" en el municipio, formando a las nuevas generaciones.</p>
+<p>Si bien persisten desafíos, como la necesidad de mejorar la infraestructura y las herramientas para los caficultores, el éxito de Domingo Torres es un faro de inspiración. Con un impresionante 92% del café acopiado en Norte de Santander clasificado como "café especial", la región tiene una base sólida para seguir creciendo. Domingo Torres cree firmemente que Ragonvalia tiene el potencial para que otros caficultores produzcan cafés "buenos e incluso mejores" que el suyo, dada la calidad de la tierra.</p>
+<p>La historia de Ragonvalia y Domingo Torres es un poderoso recordatorio de que la excelencia, la innovación y la dedicación pueden transformar una pequeña comunidad cafetera en un actor global, llevando el sabor de Colombia a cada rincón del mundo.</p>
+`
+    }
+];
+
+function getPostBySlug(slug: string) {
+    return allPosts.find(post => post.slug === slug);
+}
 
 
 export default function BlogPostPage({ params }: { params: { slug: string } }) {
-
-    // In a real app, you would fetch the post data using the slug
-    // const post = await getPostBySlug(params.slug);
-    const post = mockPost;
+    const post = getPostBySlug(params.slug);
 
     if (!post) {
-        return <div>Post no encontrado</div>
+        notFound();
     }
 
     return (
@@ -85,7 +119,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
                     layout="fill" 
                     objectFit="cover" 
                     priority
-                    data-ai-hint="cafe de olla"
+                    data-ai-hint="cafe article"
                 />
             </div>
 

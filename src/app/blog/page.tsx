@@ -19,12 +19,12 @@ const blogPosts = [
   },
   {
     id: "2",
-    slug: "origenes-cafe-colombiano-ragonvalia",
-    title: "Explorando los Orígenes: El Café de Ragonvalia",
-    excerpt: "Sumérgete en la historia y las características únicas del café cultivado en las montañas de Ragonvalia, Norte de Santander...",
-    imageUrl: "https://placehold.co/600x400.png",
+    slug: "ragonvalia-cafe-especialidad",
+    title: "Ragonvalia: El Pueblo que Conquistó al Mundo con su Café",
+    excerpt: "En el corazón de Norte de Santander, Colombia, un pequeño municipio llamado Ragonvalia está redefiniendo el panorama del café de especialidad...",
+    imageUrl: "https://i.postimg.cc/PfPSfhVB/cafe-ragonvalia.jpg",
     category: "Orígenes del Café",
-    date: "15 Julio, 2024",
+    date: "25 Julio, 2024",
     author: "Equipo Café Regional",
   },
   {
