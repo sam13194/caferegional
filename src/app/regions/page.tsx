@@ -34,9 +34,9 @@ export default function RegionsPage() {
           </TabsList>
           {regions.map(region => (
             <TabsContent key={region.slug} value={region.slug}>
-              <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-8 items-center group">
+              <div className="mt-2 grid grid-cols-1 md:grid-cols-4 gap-8 items-center group">
                 {/* Image Column */}
-                <div className="relative h-96 w-full rounded-lg overflow-hidden shadow-lg">
+                <div className="relative h-96 w-full rounded-lg overflow-hidden shadow-lg md:col-span-3">
                     <Image 
                         src={region.imageUrl} 
                         alt={`Paisaje de ${region.name}`}
@@ -48,12 +48,12 @@ export default function RegionsPage() {
                 </div>
 
                 {/* Text and Button Column */}
-                <div className="flex flex-col justify-center text-left h-full bg-card p-8 rounded-lg shadow-lg">
+                <div className="md:col-span-1 flex flex-col justify-center items-center text-center h-full bg-card p-8 rounded-lg shadow-lg">
                     <h3 className="font-lora text-3xl font-bold mb-4 text-primary">Explora {region.name}</h3>
                     <p className="mb-6 text-muted-foreground flex-grow">
                         Descubre la geografía única que da a nuestro café su sabor distintivo. Abre una vista interactiva de la región en Google Earth.
                     </p>
-                    <Button asChild size="lg" className="self-start">
+                    <Button asChild size="lg">
                         <Link href={regionViews[region.slug as keyof typeof regionViews]} target="_blank" rel="noopener noreferrer">
                             <Globe className="mr-2 h-5 w-5"/>
                             Ver en Google Earth
