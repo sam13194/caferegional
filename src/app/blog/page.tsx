@@ -9,11 +9,11 @@ import Link from "next/link";
 const blogPosts = [
   {
     id: "1",
-    slug: "guia-preparacion-v60",
-    title: "Guía Completa para Preparar Café en V60 como un Profesional",
-    excerpt: "Descubre los secretos para una extracción perfecta en tu V60 y disfruta de una taza limpia y llena de matices...",
+    slug: "como-preparar-cafe-de-olla",
+    title: "El Secreto de la Abuela: Cómo Preparar un Auténtico Café de Olla",
+    excerpt: "Redescubre el sabor tradicional del campo con esta guía para preparar un café de olla especiado y reconfortante.",
     imageUrl: "https://placehold.co/600x400.png",
-    category: "Guías de Preparación",
+    category: "Recetas Tradicionales",
     date: "20 Julio, 2024",
     author: "Equipo Café Regional",
   },
@@ -39,7 +39,7 @@ const blogPosts = [
   },
 ];
 
-const categories = ["Guías de Preparación", "Orígenes del Café", "Sostenibilidad", "Noticias de Café Regional"];
+const categories = ["Recetas Tradicionales", "Guías de Preparación", "Orígenes del Café", "Sostenibilidad", "Noticias de Café Regional"];
 
 export default function BlogPage() {
   return (
@@ -62,7 +62,7 @@ export default function BlogPage() {
                   alt={post.title} 
                   layout="fill" 
                   objectFit="cover"
-                  data-ai-hint="coffee article related"
+                  data-ai-hint={post.slug === 'como-preparar-cafe-de-olla' ? 'cafe de olla' : 'coffee article'}
                 />
               </div>
               <div className="md:w-2/3 flex flex-col">
