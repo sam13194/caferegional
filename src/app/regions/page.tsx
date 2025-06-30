@@ -1,6 +1,4 @@
 
-"use client";
-
 import RegionCard from '@/components/ui/RegionCard';
 import { regions } from '@/data/regions';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -56,7 +54,7 @@ export default function RegionsPage() {
                           <Globe className="mr-2 h-5 w-5"/>
                           Ver {region.name} en Google Earth
                         </Link>
-                      </Link>
+                      </Button>
                   </div>
               </div>
             </TabsContent>
