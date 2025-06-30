@@ -1,3 +1,5 @@
+"use client";
+
 import RegionCard from '@/components/ui/RegionCard';
 import { regions } from '@/data/regions';
 import dynamic from 'next/dynamic';
