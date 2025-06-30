@@ -73,6 +73,36 @@ const allPosts = [
 <p>Si bien persisten desafíos, como la necesidad de mejorar la infraestructura y las herramientas para los caficultores, el éxito de Domingo Torres es un faro de inspiración. Con un impresionante 92% del café acopiado en Norte de Santander clasificado como "café especial", la región tiene una base sólida para seguir creciendo. Domingo Torres cree firmemente que Ragonvalia tiene el potencial para que otros caficultores produzcan cafés "buenos e incluso mejores" que el suyo, dada la calidad de la tierra.</p>
 <p>La historia de Ragonvalia y Domingo Torres es un poderoso recordatorio de que la excelencia, la innovación y la dedicación pueden transformar una pequeña comunidad cafetera en un actor global, llevando el sabor de Colombia a cada rincón del mundo.</p>
 `
+    },
+    {
+        slug: "sostenibilidad-cultivo-cafe",
+        title: "Sostenibilidad en el Cultivo del Café: Nuestro Compromiso",
+        excerpt: "Conoce cómo en Café Regional trabajamos por un futuro más verde y justo para nuestros caficultores y el planeta.",
+        imageUrl: "https://placehold.co/800x600.png",
+        category: "Sostenibilidad",
+        date: "10 Julio, 2024",
+        author: {
+            name: "Equipo Café Regional",
+            avatarUrl: "https://placehold.co/100x100.png"
+        },
+        content: `
+<p>La sostenibilidad no es solo una palabra de moda para nosotros; es el núcleo de nuestra filosofía. En Café Regional, creemos que un café excepcional solo puede provenir de un ecosistema saludable y de comunidades prósperas. Nuestro compromiso se extiende desde la semilla hasta tu taza, asegurando que cada grano sea un testimonio de nuestro respeto por la tierra y por las manos que lo cultivan.</p>
+<h3 class="font-lora text-xl font-semibold mt-6 mb-2">Prácticas Agrícolas Amigables</h3>
+<p>Trabajamos codo a codo con nuestros aliados caficultores para implementar prácticas agrícolas que protegen la biodiversidad. Esto incluye:</p>
+<ul class="list-disc list-inside space-y-2 mb-4">
+    <li><strong>Cultivo bajo sombra:</strong> Fomentamos el cultivo de café bajo la sombra de árboles nativos, lo que crea un hábitat para la fauna local y mejora la calidad del suelo.</li>
+    <li><strong>Manejo responsable del agua:</strong> Implementamos técnicas de beneficio ecológico que reducen significativamente el consumo de agua y evitan la contaminación de las fuentes hídricas.</li>
+    <li><strong>Reducción de químicos:</strong> Priorizamos el uso de abonos orgánicos y métodos de control de plagas naturales para mantener la salud del ecosistema.</li>
+</ul>
+<h3 class="font-lora text-xl font-semibold mt-6 mb-2">Comercio Justo y Desarrollo Comunitario</h3>
+<p>Un futuro sostenible también significa un futuro justo para nuestros caficultores. Nos enorgullece:</p>
+<ol class="list-decimal list-inside space-y-2 mb-4">
+    <li><strong>Pagar precios justos:</strong> Ofrecemos precios por encima del mercado que reconocen la calidad y el arduo trabajo de las familias caficultoras.</li>
+    <li><strong>Construir relaciones a largo plazo:</strong> Creemos en alianzas duraderas basadas en la confianza y el respeto mutuo, no en transacciones únicas.</li>
+    <li><strong>Invertir en la comunidad:</strong> Parte de nuestros ingresos se reinvierte en proyectos locales que mejoran la educación, la salud y la infraestructura en las regiones donde trabajamos.</li>
+</ol>
+<p>Cada vez que disfrutas de una taza de Café Regional, no solo estás saboreando un producto de alta calidad, sino que también estás apoyando un modelo de negocio que cuida a las personas y al planeta. ¡Gracias por ser parte de este viaje sostenible!</p>
+        `
     }
 ];
 

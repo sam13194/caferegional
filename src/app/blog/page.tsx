@@ -62,7 +62,11 @@ export default function BlogPage() {
                   alt={post.title} 
                   layout="fill" 
                   objectFit="cover"
-                  data-ai-hint={post.slug === 'como-preparar-cafe-de-olla' ? 'cafe de olla' : 'coffee article'}
+                  data-ai-hint={
+                    post.slug === 'como-preparar-cafe-de-olla' ? 'cafe de olla' :
+                    post.slug === 'sostenibilidad-cultivo-cafe' ? 'sustainability coffee' :
+                    'coffee article'
+                  }
                 />
               </div>
               <div className="md:w-2/3 flex flex-col">
