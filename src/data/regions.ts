@@ -7,7 +7,7 @@ export const regions: Region[] = [
     slug: 'ragonvalia',
     shortDescription: 'Sabores balanceados con notas cítricas de las montañas.',
     description: 'Ragonvalia, enclavada en las montañas de Norte de Santander, es una tierra de café excepcional. Sus altitudes y microclimas únicos producen granos con una acidez brillante y perfiles de sabor complejos, a menudo con notas cítricas y dulces reminiscentes de la panela.',
-    imageUrl: 'https://placehold.co/600x400.png',
+    imageUrl: 'https://i.postimg.cc/bNBkFhNR/download.jpg',
     mapHighlightPath: 'M10 80 Q 95 10 180 80 Q 95 200 10 80 Z', // Placeholder SVG path
   },
   {
