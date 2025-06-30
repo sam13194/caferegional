@@ -16,17 +16,31 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [cart, setCart] = useState<CartItem[]>(() => {
-    if (typeof window !== 'undefined') {
-      const localCart = localStorage.getItem('cafeRegionalCart');
-      return localCart ? JSON.parse(localCart) : [];
-    }
-    return [];
-  });
+  const [cart, setCart] = useState<CartItem[]>([]);
 
+  // This effect runs once on the client to load the cart from localStorage, preventing hydration errors.
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('cafeRegionalCart', JSON.stringify(cart));
+    try {
+      const localCart = localStorage.getItem('cafeRegionalCart');
+      if (localCart) {
+        setCart(JSON.parse(localCart));
+      }
+    } catch (error) {
+        console.error("Failed to parse cart from localStorage", error);
+        // Handle potential parsing errors, e.g., by clearing the invalid data
+        localStorage.removeItem('cafeRegionalCart');
+    }
+  }, []);
+
+  // This effect persists the cart to localStorage whenever it changes.
+  useEffect(() => {
+    // A nested try-catch to handle potential localStorage errors (e.g., private browsing mode)
+    try {
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('cafeRegionalCart', JSON.stringify(cart));
+        }
+    } catch (error) {
+        console.error("Failed to save cart to localStorage", error);
     }
   }, [cart]);
 
@@ -50,6 +64,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
           name: product.name,
           slug: product.slug,
           image: product.images[0],
+          region: product.region,
           stock: product.stock,
           quantity: Math.min(quantity, product.stock),
           selectedVariant: selectedVariant,

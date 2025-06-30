@@ -61,6 +61,7 @@ export interface CartItem {
   name: string;
   slug: string;
   image: string | StaticImageData;
+  region: string;
   stock: number;
   quantity: number;
   selectedVariant: ProductVariant;

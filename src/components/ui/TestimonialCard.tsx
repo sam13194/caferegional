@@ -4,20 +4,13 @@ import Image from 'next/image';
 import type { Testimonial } from '@/types';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Star, UserCircle } from 'lucide-react'; // UserCircle for placeholder avatar
-import { useState, useEffect } from 'react';
 
 interface TestimonialCardProps {
   testimonial: Testimonial;
 }
 
 export default function TestimonialCard({ testimonial }: TestimonialCardProps) {
-  const [displayDate, setDisplayDate] = useState('');
-
-  useEffect(() => {
-    // This runs only on the client, after hydration
-    setDisplayDate(new Date().toLocaleDateString('es-CO'));
-  }, []);
-
+  // Removed dynamic date to prevent potential hydration errors.
   return (
     <Card className="flex flex-col h-full bg-card shadow-lg rounded-lg overflow-hidden">
       <CardHeader className="flex flex-row items-center gap-4 p-6 bg-muted/30">
@@ -52,7 +45,7 @@ export default function TestimonialCard({ testimonial }: TestimonialCardProps) {
         <p className="text-sm text-foreground italic">&quot;{testimonial.text}&quot;</p>
       </CardContent>
       <CardFooter className="p-6 pt-0 text-xs text-muted-foreground">
-        {displayDate && <p>Publicado el {displayDate}</p>}
+        {/* The dynamic date was removed to avoid hydration issues. */}
       </CardFooter>
     </Card>
   );
