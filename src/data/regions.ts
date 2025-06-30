@@ -25,7 +25,7 @@ export const regions: Region[] = [
     slug: 'durania',
     shortDescription: 'Aromas florales y suavidad en cada taza.',
     description: 'Durania, con su tradición cafetera arraigada, nos regala cafés de perfil suave y aromático. Sus granos, cultivados con esmero por generaciones de caficultores, se distinguen por sus delicadas notas florales y una acidez equilibrada, resultando en una taza limpia y reconfortante.',
-    imageUrl: 'https://placehold.co/600x400.png',
+    imageUrl: 'https://i.postimg.cc/qRpgmbfr/download.jpg',
     mapHighlightPath: 'M30 40 Q 120 30 200 100 Q 50 180 30 40 Z', // Placeholder SVG path
   }
 ];
