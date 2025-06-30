@@ -16,23 +16,31 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LogoIcon } from '@/components/icons/LogoIcon';
 
-const navLinks = [
-  { href: '/regions', label: 'Nuestras Regiones' },
-  { href: '/products', label: 'Tienda' },
-  { href: '/about', label: 'Sobre Nosotros' },
-  { href: '/blog', label: 'Artículos' },
-  { href: '/contact', label: 'Contacto' },
-];
-
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { cart } = useCart();
   const [cartItemCount, setCartItemCount] = useState(0);
+  const [articlesLabel, setArticlesLabel] = useState('Blog'); // Hydration fix
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+
+  // This ensures dynamic values are 'safe' on server and initial client render, then updated.
+  useEffect(() => {
+    setArticlesLabel('Artículos');
+    setCurrentYear(new Date().getFullYear());
+  }, []);
 
   useEffect(() => {
     setCartItemCount(cart.reduce((sum, item) => sum + item.quantity, 0));
   }, [cart]);
 
+
+  const navLinks = [
+    { href: '/regions', label: 'Nuestras Regiones' },
+    { href: '/products', label: 'Tienda' },
+    { href: '/about', label: 'Sobre Nosotros' },
+    { href: '/blog', label: articlesLabel },
+    { href: '/contact', label: 'Contacto' },
+  ];
 
   const NavLinksComponent = ({ mobile = false }: { mobile?: boolean }) => (
     <>
@@ -133,7 +141,7 @@ export default function Header() {
                   <NavLinksComponent mobile={true} />
                 </nav>
                 <div className="p-4 border-t">
-                  <p className="text-center text-sm text-muted-foreground">© {new Date().getFullYear()} Café Regional</p>
+                  <p className="text-center text-sm text-muted-foreground">© {currentYear} Café Regional</p>
                 </div>
               </div>
             </SheetContent>

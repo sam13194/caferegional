@@ -3,9 +3,19 @@
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Facebook, Instagram, Twitter, Youtube, Send } from 'lucide-react'; // Using Send for newsletter
+import { Facebook, Instagram, Twitter, Youtube, Send } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 export default function Footer() {
+  const [articlesLabel, setArticlesLabel] = useState('Blog');
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+
+  // This prevents hydration mismatches by ensuring dynamic values are set client-side.
+  useEffect(() => {
+    setArticlesLabel('Artículos');
+    setCurrentYear(new Date().getFullYear());
+  }, []);
+
   return (
     <footer className="bg-secondary text-secondary-foreground border-t">
       <div className="container mx-auto px-4 py-12">
@@ -29,7 +39,7 @@ export default function Footer() {
               <li><Link href="/about" className="hover:text-primary transition-colors">Sobre Nosotros</Link></li>
               <li><Link href="/products" className="hover:text-primary transition-colors">Tienda</Link></li>
               <li><Link href="/regions" className="hover:text-primary transition-colors">Nuestras Regiones</Link></li>
-              <li><Link href="/blog" className="hover:text-primary transition-colors">Artículos</Link></li>
+              <li><Link href="/blog" className="hover:text-primary transition-colors">{articlesLabel}</Link></li>
               <li><Link href="/contact" className="hover:text-primary transition-colors">Contacto</Link></li>
             </ul>
           </div>
@@ -56,7 +66,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 pt-8 border-t border-border text-center text-sm">
-          <p>&copy; {new Date().getFullYear()} Café Regional. Todos los derechos reservados.</p>
+          <p>&copy; {currentYear} Café Regional. Todos los derechos reservados.</p>
           <p className="text-muted-foreground">Diseñado con pasión por el café colombiano.</p>
         </div>
       </div>
