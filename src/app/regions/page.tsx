@@ -34,28 +34,32 @@ export default function RegionsPage() {
           </TabsList>
           {regions.map(region => (
             <TabsContent key={region.slug} value={region.slug}>
-              <div className="relative h-96 lg:h-[500px] w-full bg-muted rounded-lg shadow-md overflow-hidden mt-2 flex flex-col items-center justify-center text-center p-4">
-                  <Image 
-                    src={region.imageUrl} 
-                    alt={`Paisaje de ${region.name}`}
-                    layout="fill"
-                    objectFit="cover"
-                    className="z-0"
-                    data-ai-hint="coffee landscape region specific"
-                  />
-                  <div className="absolute inset-0 bg-black/50 backdrop-blur-sm z-0"></div>
-                  <div className="relative z-10 text-white">
-                      <h3 className="font-lora text-3xl font-bold mb-4">Explora {region.name}</h3>
-                      <p className="mb-6 max-w-md mx-auto text-gray-200">
+              <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-8 items-center group">
+                {/* Image Column */}
+                <div className="relative h-96 w-full rounded-lg overflow-hidden shadow-lg">
+                    <Image 
+                        src={region.imageUrl} 
+                        alt={`Paisaje de ${region.name}`}
+                        layout="fill"
+                        objectFit="cover"
+                        className="transition-transform duration-300 group-hover:scale-105"
+                        data-ai-hint="coffee landscape region specific"
+                    />
+                </div>
+
+                {/* Text and Button Column */}
+                <div className="flex flex-col justify-center text-left h-full bg-card p-8 rounded-lg shadow-lg">
+                    <h3 className="font-lora text-3xl font-bold mb-4 text-primary">Explora {region.name}</h3>
+                    <p className="mb-6 text-muted-foreground flex-grow">
                         Descubre la geografía única que da a nuestro café su sabor distintivo. Abre una vista interactiva de la región en Google Earth.
-                      </p>
-                      <Button asChild size="lg">
+                    </p>
+                    <Button asChild size="lg" className="self-start">
                         <Link href={regionViews[region.slug as keyof typeof regionViews]} target="_blank" rel="noopener noreferrer">
-                          <Globe className="mr-2 h-5 w-5"/>
-                          Ver {region.name} en Google Earth
+                            <Globe className="mr-2 h-5 w-5"/>
+                            Ver en Google Earth
                         </Link>
-                      </Button>
-                  </div>
+                    </Button>
+                </div>
               </div>
             </TabsContent>
           ))}
