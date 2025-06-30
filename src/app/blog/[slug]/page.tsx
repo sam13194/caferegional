@@ -93,7 +93,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
             <div className="mb-8">
                 <Link href="/blog" className="inline-flex items-center text-primary hover:underline">
                     <ArrowLeft className="mr-2 h-4 w-4" />
-                    Volver al Blog
+                    Volver a Artículos
                 </Link>
             </div>
 

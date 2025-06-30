@@ -29,7 +29,7 @@ export default function Footer() {
               <li><Link href="/about" className="hover:text-primary transition-colors">Sobre Nosotros</Link></li>
               <li><Link href="/products" className="hover:text-primary transition-colors">Tienda</Link></li>
               <li><Link href="/regions" className="hover:text-primary transition-colors">Nuestras Regiones</Link></li>
-              <li><Link href="/blog" className="hover:text-primary transition-colors">Blog</Link></li>
+              <li><Link href="/blog" className="hover:text-primary transition-colors">Artículos</Link></li>
               <li><Link href="/contact" className="hover:text-primary transition-colors">Contacto</Link></li>
             </ul>
           </div>

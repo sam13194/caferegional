@@ -20,7 +20,7 @@ const navLinks = [
   { href: '/regions', label: 'Nuestras Regiones' },
   { href: '/products', label: 'Tienda' },
   { href: '/about', label: 'Sobre Nosotros' },
-  { href: '/blog', label: 'Blog' },
+  { href: '/blog', label: 'Artículos' },
   { href: '/contact', label: 'Contacto' },
 ];
 
