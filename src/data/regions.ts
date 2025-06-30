@@ -16,7 +16,7 @@ export const regions: Region[] = [
     slug: 'arboledas',
     shortDescription: 'Cafés intensos y achocolatados de gran altura.',
     description: 'Arboledas, con sus imponentes picos y valles fértiles, es cuna de cafés con cuerpo y carácter. Los granos cultivados aquí suelen desarrollar notas profundas a chocolate, nueces y un dulzor residual que perdura en el paladar. Es una región que produce cafés robustos y memorables.',
-    imageUrl: 'https://i.postimg.cc/9QNzc0tK/IMG-20250629-134401.png',
+    imageUrl: 'https://i.postimg.cc/L8sTWDpz/download.jpg',
     mapHighlightPath: 'M50 50 Q 100 0 150 50 Q 100 150 50 50 Z', // Placeholder SVG path
   },
   {
