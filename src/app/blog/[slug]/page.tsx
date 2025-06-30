@@ -11,7 +11,7 @@ const mockPost = {
     slug: "como-preparar-cafe-de-olla",
     title: "El Secreto de la Abuela: Cómo Preparar un Auténtico Café de Olla",
     excerpt: "Redescubre el sabor tradicional del campo con esta guía para preparar un café de olla especiado y reconfortante.",
-    imageUrl: "https://placehold.co/1200x600.png",
+    imageUrl: "https://i.postimg.cc/5tLn50JG/image-6.png",
     category: "Recetas Tradicionales",
     date: "20 Julio, 2024",
     author: {
