@@ -27,7 +27,12 @@ export default function UsersPage() {
         const usersRef = ref(rtdb, 'users');
         const snapshot = await get(usersRef);
         if (snapshot.exists()) {
-          setUsers(Object.values(snapshot.val()));
+          const usersData = snapshot.val();
+          const usersList = Object.keys(usersData).map(key => ({
+            ...usersData[key],
+            uid: usersData[key].uid || key, // Ensure a unique key is always present
+          }));
+          setUsers(usersList);
         } else {
           setUsers([]);
         }
