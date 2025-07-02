@@ -10,7 +10,7 @@ export default function AdminProductsPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
-        <h1 className="font-lora text-3xl font-bold text-primary">Gestionar Productos</h1>
+        <h1 className="font-lora text-3xl font-bold text-primary">Gestionar Inventario</h1>
         {/* En el futuro, este enlace llevará a un formulario para crear un nuevo producto */}
         <Button asChild>
           <Link href="#"> 

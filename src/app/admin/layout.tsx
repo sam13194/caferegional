@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { DollarSign, Home, Package, Users } from "lucide-react";
+import { DollarSign, Home, Package, Users, Receipt, BarChart2, Shield } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -20,7 +20,11 @@ import { Button } from "@/components/ui/button";
 
 const navLinks = [
   { href: "/admin/accounting", label: "Contabilidad", icon: DollarSign },
-  { href: "/admin/products", label: "Productos", icon: Package },
+  { href: "/admin/products", label: "Inventario", icon: Package },
+  { href: "/admin/invoicing", label: "Facturación", icon: Receipt },
+  { href: "/admin/customers", label: "Clientes", icon: Users },
+  { href: "/admin/reports", label: "Reportes", icon: BarChart2 },
+  { href: "/admin/users", label: "Usuarios", icon: Shield },
 ];
 
 export default function AdminLayout({
@@ -48,7 +52,7 @@ export default function AdminLayout({
               <SidebarMenuItem key={link.href}>
                 <SidebarMenuButton
                   asChild
-                  isActive={pathname === link.href}
+                  isActive={pathname.startsWith(link.href)}
                   tooltip={{
                     children: link.label,
                   }}
