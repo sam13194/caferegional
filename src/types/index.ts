@@ -25,11 +25,12 @@ export interface Product {
   originDetails?: string;
   processDetails?: string;
   preparationRecommendations?: string;
+  packaging?: string;
+  observations?: string;
 
   // Fields from Firestore schema
   category?: string;
   origin?: string;
-  weight?: string; // Base weight
   featured?: boolean;
   active?: boolean;
   createdAt?: Timestamp | Date;

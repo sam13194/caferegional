@@ -2,8 +2,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { products } from "@/data/products";
 import { Button } from "@/components/ui/button";
-import { Pencil, PlusCircle, Trash2 } from "lucide-react";
+import { Pencil, PlusCircle, Trash2, Upload } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function AdminProductsPage() {
   return (
@@ -23,6 +24,7 @@ export default function AdminProductsPage() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Imagen</TableHead>
               <TableHead>Nombre</TableHead>
               <TableHead>Región</TableHead>
               <TableHead>Precio Base</TableHead>
@@ -34,6 +36,11 @@ export default function AdminProductsPage() {
           <TableBody>
             {products.map((product) => (
               <TableRow key={product.id}>
+                <TableCell>
+                  <div className="relative h-12 w-12 rounded-md overflow-hidden bg-muted">
+                    <Image src={product.images[0]} alt={product.name} layout="fill" objectFit="cover" data-ai-hint="coffee product bag"/>
+                  </div>
+                </TableCell>
                 <TableCell className="font-medium">{product.name}</TableCell>
                 <TableCell>{product.region}</TableCell>
                 <TableCell>${product.price.toLocaleString('es-CO')}</TableCell>
@@ -44,10 +51,16 @@ export default function AdminProductsPage() {
                   </Badge>
                 </TableCell>
                 <TableCell className="text-right">
-                  <Button variant="ghost" size="icon">
+                  <Button variant="ghost" size="icon" title="Cargar Imagen">
+                    <label htmlFor={`upload-${product.id}`} className="cursor-pointer">
+                      <Upload className="h-4 w-4" />
+                    </label>
+                    <input type="file" id={`upload-${product.id}`} className="hidden" accept="image/*" />
+                  </Button>
+                  <Button variant="ghost" size="icon" title="Editar Producto">
                     <Pencil className="h-4 w-4" />
                   </Button>
-                   <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive/90">
+                   <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive/90" title="Eliminar Producto">
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </TableCell>
