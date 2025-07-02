@@ -101,7 +101,7 @@ export default function Header() {
             <DropdownMenuContent align="end" className="w-56">
               {user ? (
                 <>
-                  <DropdownMenuLabel>Hola, {user.displayName || 'Usuario'}</DropdownMenuLabel>
+                  <DropdownMenuLabel>Hola, {user.dbName || user.displayName || 'Usuario'}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <Link href="/account" className="cursor-pointer">
@@ -117,7 +117,7 @@ export default function Header() {
                   </DropdownMenuItem>
                   {role === 'admin' && (
                     <DropdownMenuItem asChild>
-                      <Link href="/admin/products" className="cursor-pointer">
+                      <Link href="/admin/accounting" className="cursor-pointer">
                         <LayoutDashboard className="mr-2 h-4 w-4" />
                         <span>Panel Admin</span>
                       </Link>

@@ -6,7 +6,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/lib/firebase/config';
+import { auth, rtdb } from '@/lib/firebase/config';
+import { ref as rtdbRef, get } from 'firebase/database';
 import { useToast } from "@/hooks/use-toast";
 import Link from 'next/link';
 
@@ -39,12 +40,25 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginFormData) => {
     setIsSubmitting(true);
     try {
-      await signInWithEmailAndPassword(auth, data.email, data.password);
+      const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
+      const user = userCredential.user;
+
+      // Fetch user role from Realtime Database to decide redirection
+      const userRef = rtdbRef(rtdb, `users/${user.uid}`);
+      const snapshot = await get(userRef);
+      const userRole = snapshot.exists() ? snapshot.val().role : 'customer';
+
       toast({
         title: "¡Bienvenido de nuevo!",
         description: "Has iniciado sesión correctamente.",
       });
-      router.push('/account'); // Redirigir a la página de la cuenta
+      
+      if (userRole === 'admin') {
+        router.push('/admin/accounting');
+      } else {
+        router.push('/account');
+      }
+
     } catch (error: any) {
       console.error("Error en el inicio de sesión:", error);
       toast({
