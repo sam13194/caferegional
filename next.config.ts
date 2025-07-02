@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
+    // unoptimized: true, // No longer needed as Vercel handles optimization
     remotePatterns: [
       {
         protocol: 'https',

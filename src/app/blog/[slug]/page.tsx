@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
+import { products } from "@/data/products";
 
 // In a real app, this data would come from a CMS or database
 const allPosts = [
@@ -110,6 +111,12 @@ function getPostBySlug(slug: string) {
     return allPosts.find(post => post.slug === slug);
 }
 
+export async function generateStaticParams() {
+  return allPosts.map((post) => ({
+    slug: post.slug,
+  }));
+}
+
 
 export default function BlogPostPage({ params }: { params: { slug: string } }) {
     const post = getPostBySlug(params.slug);
@@ -147,7 +154,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
                     src={post.imageUrl} 
                     alt={post.title} 
                     layout="fill" 
-                    objectFit="cover" 
+                    objectFit="cover"
                     priority
                     data-ai-hint="cafe article"
                 />
