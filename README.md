@@ -12,5 +12,5 @@ Este proyecto ha sido construido utilizando las siguientes tecnologías:
 *   **Next.js:** Un framework de React para la construcción de aplicaciones web con renderizado del lado del servidor y generación de sitios estáticos.
 *   **TypeScript:** Un superset de JavaScript que añade tipado estático para mejorar la mantenibilidad y detectar errores en tiempo de desarrollo.
 *   **Tailwind CSS:** Un framework de CSS de utilidad que permite construir diseños personalizados rápidamente.
-*   **Firebase:** Utilizado para [Mencionar aquí los servicios de Firebase que utilizas, por ejemplo: autenticación, base de datos, hosting, etc.].
+*   **Firebase:** Se utiliza para la autenticación de usuarios (Authentication), la base de datos en tiempo real (Realtime Database) para productos y usuarios, y el despliegue con App Hosting.
 *   **Genkit (posiblemente con IA):** Basado en los archivos en `src/ai`, parece que hay una integración o planes para funcionalidades de inteligencia artificial, posiblemente para recomendaciones de café u otras características.
