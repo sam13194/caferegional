@@ -55,6 +55,8 @@ export default function LoginPage() {
       
       if (userRole === 'admin') {
         router.push('/admin/accounting');
+      } else if (userRole === 'employee') {
+        router.push('/admin/products'); // Redirect employees to inventory
       } else {
         router.push('/account');
       }

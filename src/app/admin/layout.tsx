@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/context/AuthContext'; // Importar el hook de autenticación
+import { useRouter, usePathname } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { DollarSign, Home, Package, Users, Receipt, BarChart2, Shield, Loader2 } from "lucide-react";
 import {
   Sidebar,
@@ -20,13 +19,14 @@ import {
 import { LogoIcon } from "@/components/icons/LogoIcon";
 import { Button } from "@/components/ui/button";
 
-const navLinks = [
-  { href: "/admin/accounting", label: "Contabilidad", icon: DollarSign },
-  { href: "/admin/products", label: "Inventario", icon: Package },
-  { href: "/admin/invoicing", label: "Facturación", icon: Receipt },
-  { href: "/admin/customers", label: "Clientes", icon: Users },
-  { href: "/admin/reports", label: "Reportes", icon: BarChart2 },
-  { href: "/admin/users", label: "Usuarios", icon: Shield },
+// Define all possible links with the roles that can see them
+const navLinksConfig = [
+  { href: "/admin/accounting", label: "Contabilidad", icon: DollarSign, roles: ['admin'] },
+  { href: "/admin/products", label: "Inventario", icon: Package, roles: ['admin', 'employee'] },
+  { href: "/admin/invoicing", label: "Facturación", icon: Receipt, roles: ['admin', 'employee'] },
+  { href: "/admin/customers", label: "Clientes", icon: Users, roles: ['admin', 'employee'] },
+  { href: "/admin/reports", label: "Reportes", icon: BarChart2, roles: ['admin'] },
+  { href: "/admin/users", label: "Usuarios", icon: Shield, roles: ['admin'] },
 ];
 
 function AdminPage({ children }: { children: React.ReactNode}) {
@@ -34,15 +34,18 @@ function AdminPage({ children }: { children: React.ReactNode}) {
   const { user, role, loading } = useAuth();
   const router = useRouter();
 
+  // Filter links based on the user's role
+  const navLinks = role ? navLinksConfig.filter(link => link.roles.includes(role)) : [];
+
   useEffect(() => {
-    if (!loading && (!user || role !== 'admin')) {
-      // Si no está cargando y (no hay usuario O el rol no es admin), redirigir.
+    // Redirect if not loading and user is not an admin or employee
+    if (!loading && (!user || !['admin', 'employee'].includes(role as string))) {
       router.push('/'); 
     }
   }, [user, role, loading, router]);
 
-  // Muestra un loader si todavía está verificando el rol, o si está a punto de redirigir.
-  if (loading || !user || role !== 'admin') {
+  // Show a loader while verifying access
+  if (loading || !user || !['admin', 'employee'].includes(role as string)) {
     return (
       <div className="flex items-center justify-center h-screen w-screen">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -51,7 +54,7 @@ function AdminPage({ children }: { children: React.ReactNode}) {
     );
   }
   
-  // Si el rol es admin, muestra el contenido del panel.
+  // If user is admin or employee, show the admin panel content
   return (
     <>
       <Sidebar side="left" collapsible="icon">
