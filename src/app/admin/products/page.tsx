@@ -8,7 +8,7 @@ import Image from "next/image";
 
 export default function AdminProductsPage() {
   return (
-    <div className="container mx-auto py-8">
+    <div>
       <div className="flex justify-between items-center mb-8">
         <h1 className="font-lora text-3xl font-bold text-primary">Gestionar Productos</h1>
         {/* En el futuro, este enlace llevará a un formulario para crear un nuevo producto */}
