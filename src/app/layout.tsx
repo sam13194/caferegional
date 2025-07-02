@@ -1,31 +1,29 @@
-import type { Metadata } from 'next';
-import { Lora, Open_Sans } from 'next/font/google';
-import './globals.css';
+import { Lora, Open_Sans } from "next/font/google";
+import "./globals.css";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/toaster";
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
-import { CartProvider } from '@/context/CartContext';
+import { CartProvider } from "@/context/CartContext";
+import { AuthProvider } from "@/context/AuthContext"; // Importar el nuevo AuthProvider
+import Script from 'next/script';
 
 const lora = Lora({
-  subsets: ['latin'],
-  variable: '--font-lora',
-  display: 'swap',
-  weight: ['400', '700'],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-lora",
 });
 
 const openSans = Open_Sans({
-  subsets: ['latin'],
-  variable: '--font-open-sans',
-  weight: ['400', '700'],
-  display: 'swap',
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-open-sans",
 });
 
-export const metadata: Metadata = {
-  title: 'Café Regional - Café de Origen Colombiano',
-  description: 'Descubre el auténtico sabor del café colombiano de las regiones de Ragonvalia, Arboledas y Durania.',
-  icons: {
-    icon: '/favicon.ico', // Placeholder, assuming a favicon might be added later
-  }
+
+export const metadata = {
+  title: "CafeRegional - Café de Origen de Norte de Santander",
+  description: "Descubre el auténtico sabor del café de Norte de Santander. Granos seleccionados de las mejores fincas para una experiencia única.",
+  keywords: "café, norte de santander, café de origen, café premium, arboledas, durania, ragonvalia",
 };
 
 export default function RootLayout({
@@ -38,14 +36,20 @@ export default function RootLayout({
       <head>
       </head>
       <body className={`${lora.variable} ${openSans.variable} antialiased flex flex-col min-h-screen`}>
-        <CartProvider>
-          <Header />
-          <main className="flex-grow container mx-auto px-4 py-8">
-            {children}
-          </main>
-          <Footer />
-          <Toaster />
-        </CartProvider>
+        <AuthProvider> {/* Envolver con AuthProvider */}
+          <CartProvider>
+            <Header />
+            <main className="flex-grow container mx-auto px-4 py-8">
+              {children}
+            </main>
+            <Footer />
+            <Toaster />
+          </CartProvider>
+        </AuthProvider>
+        <Script 
+          src="https://widget.cloudinary.com/v2.0/global/all.js"
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   );

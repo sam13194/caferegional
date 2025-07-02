@@ -1,9 +1,11 @@
-
 "use client";
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext'; // Importar el hook de autenticación
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { DollarSign, Home, Package, Users, Receipt, BarChart2, Shield } from "lucide-react";
+import { DollarSign, Home, Package, Users, Receipt, BarChart2, Shield, Loader2 } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -27,15 +29,31 @@ const navLinks = [
   { href: "/admin/users", label: "Usuarios", icon: Shield },
 ];
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function AdminPage({ children }: { children: React.ReactNode}) {
   const pathname = usePathname();
+  const { user, role, loading } = useAuth();
+  const router = useRouter();
 
+  useEffect(() => {
+    if (!loading && (!user || role !== 'admin')) {
+      // Si no está cargando y (no hay usuario O el rol no es admin), redirigir.
+      router.push('/'); 
+    }
+  }, [user, role, loading, router]);
+
+  // Muestra un loader si todavía está verificando el rol, o si está a punto de redirigir.
+  if (loading || !user || role !== 'admin') {
+    return (
+      <div className="flex items-center justify-center h-screen w-screen">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        <p className="ml-4">Verificando acceso...</p>
+      </div>
+    );
+  }
+  
+  // Si el rol es admin, muestra el contenido del panel.
   return (
-    <SidebarProvider>
+    <>
       <Sidebar side="left" collapsible="icon">
         <SidebarHeader className="p-4 justify-center">
             <Link href="/" className="flex items-center gap-2 group-data-[collapsible=icon]:hidden">
@@ -58,7 +76,7 @@ export default function AdminLayout({
                   }}
                 >
                   <Link href={link.href}>
-                    <link.icon/>
+                    <link.icon className="h-5 w-5" />
                     <span>{link.label}</span>
                   </Link>
                 </SidebarMenuButton>
@@ -67,8 +85,9 @@ export default function AdminLayout({
           </SidebarMenu>
         </SidebarContent>
       </Sidebar>
+      
       <SidebarInset>
-        <header className="flex h-16 items-center justify-between border-b px-6">
+        <header className="flex h-16 items-center justify-between border-b px-6 bg-background/95 backdrop-blur-sm sticky top-0 z-10">
             <div className="flex items-center gap-2">
                 <SidebarTrigger />
                 <h2 className="text-lg font-semibold">Panel de Administrador</h2>
@@ -84,6 +103,18 @@ export default function AdminLayout({
             {children}
         </main>
       </SidebarInset>
+    </>
+  )
+}
+
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <SidebarProvider>
+      <AdminPage>{children}</AdminPage>
     </SidebarProvider>
   );
 }

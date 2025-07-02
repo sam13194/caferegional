@@ -1,17 +1,45 @@
+"use client";
+
+import { useAuth } from '@/context/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ShoppingBag, User, Edit } from "lucide-react";
+import { ShoppingBag, User, Edit, Loader2 } from "lucide-react";
 
 export default function AccountDashboardPage() {
-  // Mock data - replace with actual user data
-  const userName = "Juan Pérez";
-  const recentOrder = { id: "AO-123456789", date: "15 Julio, 2024", total: "$53.000", status: "Enviado" };
+  const { user, role, loading } = useAuth();
+
+  // Muestra un estado de carga mientras se obtiene la información del usuario
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center py-24">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="ml-4">Cargando tu información...</p>
+      </div>
+    );
+  }
+
+  // Si no hay usuario (lo que no debería pasar si está protegido, pero es buena práctica)
+  if (!user) {
+    return (
+      <div className="text-center py-24">
+        <p>No has iniciado sesión.</p>
+        <Button asChild className="mt-4">
+          <Link href="/login">Ir a Iniciar Sesión</Link>
+        </Button>
+      </div>
+    );
+  }
+
+  // TODO: Reemplazar con datos reales de pedidos
+  const recentOrder = null; // { id: "AO-123456789", date: "15 Julio, 2024", total: "$53.000", status: "Enviado" };
 
   return (
     <div className="space-y-8">
       <section>
-        <h2 className="font-lora text-2xl font-semibold mb-1 text-foreground">Bienvenido, {userName}!</h2>
+        <h2 className="font-lora text-2xl font-semibold mb-1 text-foreground">
+          Bienvenido, {user.displayName || 'a Café Regional'}!
+        </h2>
         <p className="text-muted-foreground">Desde aquí puedes gestionar tus pedidos, información personal y más.</p>
       </section>
 
@@ -46,8 +74,9 @@ export default function AccountDashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm">
-            <p><span className="font-semibold">Nombre:</span> {userName}</p>
-            <p><span className="font-semibold">Email:</span> juan.perez@example.com</p>
+            <p><span className="font-semibold">Nombre:</span> {user.displayName || 'No especificado'}</p>
+            <p><span className="font-semibold">Email:</span> {user.email}</p>
+            <p><span className="font-semibold">Rol:</span> <span className="capitalize px-2 py-0.5 bg-muted text-muted-foreground rounded-full text-xs">{role}</span></p>
             <Button variant="outline" size="sm" asChild className="mt-2">
               <Link href="/account/profile"><Edit className="mr-2 h-3 w-3"/> Editar Perfil</Link>
             </Button>

@@ -1,24 +1,65 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { rtdb } from '@/lib/firebase/config';
+import { ref, get } from 'firebase/database';
 import { Shield } from "lucide-react";
+import UserRoleSwitcher from "@/components/admin/UserRoleSwitcher";
 
-export default function UsersPage() {
+interface UserData {
+  uid: string;
+  name: string;
+  email: string;
+  role: 'admin' | 'employee' | 'customer';
+  createdAt: string;
+}
+
+async function getUsers() {
+  const usersRef = ref(rtdb, 'users');
+  const snapshot = await get(usersRef);
+  if (snapshot.exists()) {
+    return Object.values(snapshot.val()) as UserData[];
+  }
+  return [];
+}
+
+export default async function UsersPage() {
+  const users = await getUsers();
+
   return (
     <div>
-      <h1 className="font-lora text-3xl font-bold text-primary mb-8">Usuarios y Seguridad</h1>
+      <h1 className="font-lora text-3xl font-bold text-primary mb-8">Usuarios y Roles</h1>
       <Card className="shadow-sm">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Shield className="h-5 w-5" />
-            Módulo en Construcción
+            Gestionar Acceso de Usuarios
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-muted-foreground">
-            La seguridad es lo primero. En esta sección podrás gestionar los roles y permisos
-            de los usuarios que tienen acceso al panel de administración.
-            Podrás crear nuevos usuarios, asignar roles (ej. Administrador, Editor) y controlar
-            quién puede ver o modificar cada módulo de la plataforma.
-          </p>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Nombre</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Fecha de Registro</TableHead>
+                <TableHead>Rol Asignado</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {users.map((user) => (
+                <TableRow key={user.uid}>
+                  <TableCell className="font-medium">{user.name || 'N/A'}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>
+                    {user.createdAt ? new Date(user.createdAt).toLocaleDateString('es-CO') : 'N/A'}
+                  </TableCell>
+                  <TableCell>
+                    <UserRoleSwitcher userId={user.uid} currentRole={user.role || 'customer'} />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
     </div>

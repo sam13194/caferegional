@@ -1,11 +1,14 @@
 "use client";
 
 import Link from 'next/link';
-import { Search, User, ShoppingCart, Menu, X, LayoutDashboard, LogOut, ShoppingBag } from 'lucide-react';
+import { Search, User, ShoppingCart, Menu, X, LayoutDashboard, LogOut, ShoppingBag, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'; // SheetHeader y SheetTitle añadidos
 import { useState, useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
+import { auth } from '@/lib/firebase/config';
+import { signOut } from 'firebase/auth';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,30 +18,45 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogoIcon } from '@/components/icons/LogoIcon';
+import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { cart } = useCart();
   const [cartItemCount, setCartItemCount] = useState(0);
-  const [articlesLabel, setArticlesLabel] = useState('Blog'); // Hydration fix
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-
-  // This ensures dynamic values are 'safe' on server and initial client render, then updated.
-  useEffect(() => {
-    setArticlesLabel('Artículos');
-    setCurrentYear(new Date().getFullYear());
-  }, []);
+  
+  const { user, role } = useAuth();
+  const { toast } = useToast();
+  const router = useRouter();
 
   useEffect(() => {
     setCartItemCount(cart.reduce((sum, item) => sum + item.quantity, 0));
   }, [cart]);
 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      toast({
+        title: "Sesión Cerrada",
+        description: "Has cerrado sesión exitosamente.",
+      });
+      router.push('/');
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+      toast({
+        title: "Error",
+        description: "No se pudo cerrar la sesión. Inténtalo de nuevo.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const navLinks = [
     { href: '/regions', label: 'Nuestras Regiones' },
     { href: '/products', label: 'Tienda' },
     { href: '/about', label: 'Sobre Nosotros' },
-    { href: '/blog', label: articlesLabel },
+    { href: '/blog', label: 'Artículos' },
     { href: '/contact', label: 'Contacto' },
   ];
 
@@ -81,31 +99,52 @@ export default function Header() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/account" className="cursor-pointer">
-                  <LayoutDashboard className="mr-2 h-4 w-4" />
-                  <span>Panel Principal</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/account/orders" className="cursor-pointer">
-                  <ShoppingBag className="mr-2 h-4 w-4" />
-                  <span>Mis Pedidos</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/account/profile" className="cursor-pointer">
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Detalles de Cuenta</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer">
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Cerrar Sesión</span>
-              </DropdownMenuItem>
+              {user ? (
+                <>
+                  <DropdownMenuLabel>Hola, {user.displayName || 'Usuario'}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/account" className="cursor-pointer">
+                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      <span>Mi Cuenta</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/account/orders" className="cursor-pointer">
+                      <ShoppingBag className="mr-2 h-4 w-4" />
+                      <span>Mis Pedidos</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  {role === 'admin' && (
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin/products" className="cursor-pointer">
+                        <LayoutDashboard className="mr-2 h-4 w-4" />
+                        <span>Panel Admin</span>
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onSelect={handleLogout} className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Cerrar Sesión</span>
+                  </DropdownMenuItem>
+                </>
+              ) : (
+                <>
+                  <DropdownMenuItem asChild>
+                    <Link href="/login" className="cursor-pointer">
+                      <LogIn className="mr-2 h-4 w-4" />
+                      <span>Iniciar Sesión</span>
+                    </Link>
+                  </DropdownMenuItem>
+                   <DropdownMenuItem asChild>
+                    <Link href="/register" className="cursor-pointer">
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Registrarse</span>
+                    </Link>
+                  </DropdownMenuItem>
+                </>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
 
@@ -127,23 +166,17 @@ export default function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-full max-w-xs bg-background p-0">
-              <div className="flex flex-col h-full">
-                <div className="flex items-center justify-between p-4 border-b">
-                  <Link href="/" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
+              <SheetHeader className="p-4 border-b">
+                <SheetTitle asChild>
+                   <Link href="/" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
                     <LogoIcon className="h-7 w-7 text-primary" />
                     <span className="font-lora text-xl font-bold text-primary">Café Regional</span>
                   </Link>
-                  <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(false)} aria-label="Cerrar menú">
-                    <X className="h-6 w-6" />
-                  </Button>
-                </div>
-                <nav className="flex-grow py-4">
-                  <NavLinksComponent mobile={true} />
-                </nav>
-                <div className="p-4 border-t">
-                  <p className="text-center text-sm text-muted-foreground">© {currentYear} Café Regional</p>
-                </div>
-              </div>
+                </SheetTitle>
+              </SheetHeader>
+              <nav className="flex-grow py-4">
+                <NavLinksComponent mobile={true} />
+              </nav>
             </SheetContent>
           </Sheet>
         </div>

@@ -1,19 +1,30 @@
 import ProductCard from '@/components/products/ProductCard';
-import { products } from '@/data/products';
 import { regions } from '@/data/regions';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { rtdb } from '@/lib/firebase/config';
+import { ref, get } from 'firebase/database';
+import { Product } from '@/types';
 
-// This is a Server Component. For actual filtering, state management would be needed client-side.
-// We'll render the UI for filters and then map all products.
+async function getProducts() {
+  const productsRef = ref(rtdb, 'products');
+  const snapshot = await get(productsRef);
+  if (snapshot.exists()) {
+    // Convert the products object into an array
+    return Object.values(snapshot.val()) as Product[];
+  }
+  return [];
+}
 
-export default function ProductsPage() {
+
+export default async function ProductsPage() {
+  const liveProducts = await getProducts();
   const intensityLevels = [1, 2, 3, 4, 5];
-  const flavorProfiles = Array.from(new Set(products.flatMap(p => p.flavorProfile)));
+  // The flavorProfile does not exist in the new Product structure, so this will be commented out.
+  // const flavorProfiles = Array.from(new Set(liveProducts.flatMap(p => p.flavorProfile)));
 
   return (
     <div className="flex flex-col md:flex-row gap-8">
@@ -56,11 +67,12 @@ export default function ProductsPage() {
           </div>
         </div>
         
-        {/* Flavor Profile Filter */}
+        {/* Flavor Profile Filter - Commented out as it's not in the new data */}
+        {/*
         <div>
           <h3 className="font-semibold mb-2 text-foreground">Notas de Cata</h3>
           <div className="space-y-2">
-            {flavorProfiles.slice(0, 5).map(profile => ( // Show a few common ones
+            {flavorProfiles.slice(0, 5).map(profile => (
               <div key={profile} className="flex items-center space-x-2">
                 <Checkbox id={`flavor-${profile.toLowerCase()}`} />
                 <Label htmlFor={`flavor-${profile.toLowerCase()}`} className="text-sm font-normal">{profile}</Label>
@@ -68,6 +80,7 @@ export default function ProductsPage() {
             ))}
           </div>
         </div>
+        */}
 
         <Button className="w-full mt-4">Aplicar Filtros</Button>
         <Button variant="outline" className="w-full mt-2">Limpiar Filtros</Button>
@@ -77,7 +90,7 @@ export default function ProductsPage() {
       {/* Products Grid */}
       <main className="w-full md:w-3/4 lg:w-4/5">
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-          <p className="text-sm text-muted-foreground">Mostrando {products.length} productos</p>
+          <p className="text-sm text-muted-foreground">Mostrando {liveProducts.length} productos</p>
           <Select defaultValue="popularity">
             <SelectTrigger className="w-full sm:w-[180px] bg-card">
               <SelectValue placeholder="Ordenar por" />
@@ -94,7 +107,7 @@ export default function ProductsPage() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((product) => (
+          {liveProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
