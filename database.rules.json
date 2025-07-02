@@ -1,0 +1,40 @@
+{
+  "rules": {
+    // 1. PUBLIC-FACING DATA
+    // Anyone can read products and categories to browse the store.
+    "products": { ".read": true },
+    "categories": { ".read": true },
+    "settings": { ".read": true },
+
+    // 2. ADMIN-ONLY WRITE ACCESS
+    // By default, only admins can write to the database, except for the specific paths below.
+    ".write": "root.child('users').child(auth.uid).child('role').val() === 'admin'",
+
+    // 3. USER-SPECIFIC DATA
+    "users": {
+      "$uid": {
+        // A user can read their own profile. Admins can read any profile.
+        ".read": "auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin'",
+        // A user can create or update their own profile information.
+        ".write": "auth.uid === $uid",
+        // Validate that on creation, the role is 'customer'. Admins can change it later.
+        ".validate": "newData.child('role').val() === 'customer' || root.child('users').child(auth.uid).child('role').val() === 'admin'"
+      }
+    },
+    "orders": {
+      "$orderId": {
+        // An admin can read all orders. A user can only read their own.
+        ".read": "root.child('users').child(auth.uid).child('role').val() === 'admin' || data.child('userId').val() === auth.uid",
+        // A user can only create a new order for themselves, but cannot edit it later.
+        ".write": "newData.child('userId').val() === auth.uid && !data.exists()"
+      }
+    },
+    "cart": {
+      "$uid": {
+        // A user can only read and write to their own cart.
+        ".read": "auth.uid === $uid",
+        ".write": "auth.uid === $uid"
+      }
+    }
+  }
+}
