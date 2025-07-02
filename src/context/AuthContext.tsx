@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { ref, get } from 'firebase/database'; // Importar get en lugar de onValue
+import { ref, get } from 'firebase/database';
 import { auth, rtdb } from '@/lib/firebase/config';
 import { Loader2 } from 'lucide-react';
 
@@ -29,23 +29,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const unsubscribeAuth = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
-        // Si hay un usuario, obtenemos su rol UNA SOLA VEZ con get()
         try {
           const userRoleRef = ref(rtdb, `users/${currentUser.uid}/role`);
           const snapshot = await get(userRoleRef);
           if (snapshot.exists()) {
             setRole(snapshot.val());
           } else {
-            setRole('customer'); // Si no hay rol en la DB, es un cliente
+            setRole('customer'); // Default to customer if no role is found
           }
         } catch (error) {
           console.error("Error fetching user role:", error);
-          setRole('customer'); // Asumir rol de cliente si hay error
+          setRole('customer'); // Assume customer role on error
+        } finally {
+          // Crucially, set loading to false only after role fetching is complete.
+          setLoading(false);
         }
       } else {
         setRole(null);
+        // Also set loading to false if there is no user.
+        setLoading(false);
       }
-      setLoading(false);
     });
 
     return () => unsubscribeAuth();
