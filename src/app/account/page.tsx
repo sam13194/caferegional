@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useAuth } from '@/context/AuthContext';
@@ -9,7 +10,7 @@ import { ShoppingBag, User, Edit, Loader2 } from "lucide-react";
 export default function AccountDashboardPage() {
   const { user, role, loading } = useAuth();
 
-  // Muestra un estado de carga mientras se obtiene la información del usuario
+  // Aunque AuthProvider tiene un loader global, mantenemos uno local por si acaso.
   if (loading) {
     return (
       <div className="flex justify-center items-center py-24">
@@ -38,7 +39,7 @@ export default function AccountDashboardPage() {
     <div className="space-y-8">
       <section>
         <h2 className="font-lora text-2xl font-semibold mb-1 text-foreground">
-          Bienvenido, {user.displayName || 'a Café Regional'}!
+          Bienvenido, {user.dbName || user.displayName || 'a Café Regional'}!
         </h2>
         <p className="text-muted-foreground">Desde aquí puedes gestionar tus pedidos, información personal y más.</p>
       </section>
@@ -74,7 +75,7 @@ export default function AccountDashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm">
-            <p><span className="font-semibold">Nombre:</span> {user.displayName || 'No especificado'}</p>
+            <p><span className="font-semibold">Nombre:</span> {user.dbName || user.displayName || 'No especificado'}</p>
             <p><span className="font-semibold">Email:</span> {user.email}</p>
             <p><span className="font-semibold">Rol:</span> <span className="capitalize px-2 py-0.5 bg-muted text-muted-foreground rounded-full text-xs">{role}</span></p>
             <Button variant="outline" size="sm" asChild className="mt-2">

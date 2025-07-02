@@ -1,3 +1,4 @@
+
 "use client";
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
@@ -8,8 +9,13 @@ import { Loader2 } from 'lucide-react';
 
 type UserRole = 'admin' | 'employee' | 'customer' | null;
 
+// Extender el tipo User para incluir campos de nuestra DB
+interface AppUser extends User {
+  dbName?: string;
+}
+
 interface AuthContextType {
-  user: User | null;
+  user: AppUser | null;
   role: UserRole;
   loading: boolean;
 }
@@ -21,32 +27,37 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AppUser | null>(null);
   const [role, setRole] = useState<UserRole>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
       if (currentUser) {
         try {
-          const userRoleRef = ref(rtdb, `users/${currentUser.uid}/role`);
-          const snapshot = await get(userRoleRef);
+          const userRef = ref(rtdb, `users/${currentUser.uid}`);
+          const snapshot = await get(userRef);
+          
           if (snapshot.exists()) {
-            setRole(snapshot.val());
+            const dbUser = snapshot.val();
+            // Combinar usuario de Auth con datos de la DB
+            setUser({ ...currentUser, dbName: dbUser.name });
+            setRole(dbUser.role || 'customer');
           } else {
-            setRole('customer'); // Default to customer if no role is found
+            // Si no hay datos en la DB, usar solo datos de Auth
+            setUser(currentUser);
+            setRole('customer'); 
           }
         } catch (error) {
-          console.error("Error fetching user role:", error);
-          setRole('customer'); // Assume customer role on error
+          console.error("Error fetching user data:", error);
+          setUser(currentUser);
+          setRole('customer'); // Asumir rol de cliente en caso de error
         } finally {
-          // Crucially, set loading to false only after role fetching is complete.
           setLoading(false);
         }
       } else {
+        setUser(null);
         setRole(null);
-        // Also set loading to false if there is no user.
         setLoading(false);
       }
     });
@@ -54,6 +65,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => unsubscribeAuth();
   }, []);
 
+  // Muestra un loader global mientras se verifica la sesión y el rol.
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen w-screen">
@@ -63,7 +75,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, role, loading }}>
+    <AuthContext.Provider value={{ user, role, loading: false }}>
       {children}
     </AuthContext.Provider>
   );
