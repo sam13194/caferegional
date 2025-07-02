@@ -10,7 +10,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "deploy": "gh-pages -d out"
+    "deploy": "firebase deploy"
   },
   "dependencies": {
     "@genkit-ai/googleai": "^1.8.0",
