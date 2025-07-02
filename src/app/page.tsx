@@ -83,7 +83,7 @@ export default function HomePage() {
       <section className="py-12 bg-muted rounded-lg">
         <h2 className="font-lora text-3xl font-bold text-center mb-10 text-primary">Lo que Dicen Nuestros Clientes</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8"> {/* Adjusted for better display */}
-          {testimonials.slice(0, 4).map((testimonial) => ( // Display up to 4 testimonials
+          {testimonials.slice(0, 2).map((testimonial) => ( // Display up to 2 testimonials
             <TestimonialCard key={testimonial.id} testimonial={testimonial} />
           ))}
         </div>
