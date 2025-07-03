@@ -5,7 +5,41 @@ import WompiPaymentButton from "@/components/wompi/WompiPaymentButton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Truck, Info } from "lucide-react";
+import { Truck, Info, MessageCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+const WhatsAppButton = () => {
+  const { cart, getCartTotal } = useCart();
+  const phoneNumber = "573209214326";
+
+  const handleWhatsAppInquiry = () => {
+    const cartDetails = cart.map(item => 
+      `${item.name} (${item.selectedVariant.size}) x ${item.quantity} - $${(item.selectedVariant.price * item.quantity).toLocaleString('es-CO')}`
+    ).join('
+');
+    
+    const total = getCartTotal().toLocaleString('es-CO');
+    
+    const message = `¡Hola! Estoy interesado en los siguientes productos de Café de la Montaña:
+
+${cartDetails}
+
+*Total: $${total}*
+
+Quedo atento a las instrucciones para el pago y envío.`;
+
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    
+    window.open(whatsappUrl, '_blank');
+  };
+
+  return (
+    <Button variant="outline" className="w-full flex items-center gap-2" onClick={handleWhatsAppInquiry}>
+      <MessageCircle className="h-4 w-4" />
+      Contactar por WhatsApp
+    </Button>
+  );
+};
 
 export default function CheckoutPage() {
   const { cart, getCartTotal } = useCart();
@@ -86,7 +120,10 @@ export default function CheckoutPage() {
             <p>El costo del envío se paga directamente a la transportadora al momento de recibir tu pedido.</p>
           </div>
 
-          <WompiPaymentButton />
+          <div className="space-y-2">
+            <WompiPaymentButton />
+            <WhatsAppButton />
+          </div>
         </div>
       </div>
     </div>

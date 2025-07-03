@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
+import { Loader2 } from 'lucide-react';
 
 // Define the type for the Wompi checkout object
 declare global {
@@ -15,6 +16,8 @@ declare global {
 const WompiPaymentButton = () => {
   const { cart } = useCart();
   const { user } = useAuth();
+  const [isWompiReady, setIsWompiReady] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const totalAmount = useMemo(() => {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -24,6 +27,14 @@ const WompiPaymentButton = () => {
     const script = document.createElement('script');
     script.src = 'https://checkout.wompi.co/widget.js';
     script.async = true;
+    script.onload = () => {
+      setIsWompiReady(true);
+      setIsLoading(false);
+    };
+    script.onerror = () => {
+      console.error('Error al cargar el script de Wompi.');
+      setIsLoading(false);
+    };
     document.body.appendChild(script);
 
     return () => {
@@ -37,22 +48,23 @@ const WompiPaymentButton = () => {
       return;
     }
 
+    if (!isWompiReady || !window.ePayco) {
+      alert('El servicio de pago no está disponible en este momento. Por favor, intenta de nuevo más tarde.');
+      return;
+    }
+
     const checkout = new window.ePayco({
       key: process.env.NEXT_PUBLIC_WOMPI_PUBLIC_KEY,
       test: true, 
     });
 
     checkout.open({
-      // Wompi's checkout configuration
       external: 'false',
       autoclick: 'false',
-      // Amount information
       amount: totalAmount.toString(),
       tax: '0',
       tax_base: '0',
       currency: 'COP',
-
-      // Invoice information
       invoice: `INV-${Date.now()}`,
       name_billing: `${user.firstName} ${user.lastName}`,
       address_billing: user.address || 'N/A',
@@ -60,12 +72,8 @@ const WompiPaymentButton = () => {
       mobilephone_billing: user.phone || 'N/A',
       number_doc_billing: user.document || 'N/A',
       email_billing: user.email,
-
-      // Confirmation and response pages
       confirmation: `${window.location.origin}/checkout/success`,
       response: `${window.location.origin}/checkout/success`,
-
-      // Pre-filled customer data
       name: user.firstName,
       last_name: user.lastName,
       email: user.email,
@@ -75,8 +83,15 @@ const WompiPaymentButton = () => {
   };
 
   return (
-    <Button onClick={handlePayment} className="w-full">
-      Pagar con Wompi
+    <Button onClick={handlePayment} className="w-full" disabled={!isWompiReady || isLoading}>
+      {isLoading ? (
+        <>
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          Cargando...
+        </>
+      ) : (
+        'Pagar con Wompi'
+      )}
     </Button>
   );
 };
