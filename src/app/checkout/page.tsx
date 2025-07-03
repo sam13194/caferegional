@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 
 const WhatsAppButton = () => {
   const { cart, getCartTotal } = useCart();
-  const phoneNumber = "573209214326";
+  const phoneNumber = "573209214326"; // Este número es privado y no se mostrará al usuario
 
   const handleWhatsAppInquiry = () => {
     const cartDetails = cart.map(item => 
@@ -94,7 +94,7 @@ export default function CheckoutPage() {
           <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
             {cart.map(item => (
               <div key={item.selectedVariant.id} className="flex justify-between text-sm items-center">
-                <span className="text-muted-foreground truncate pr-2">{item.name} ({item.selectedVariant.size}) x {item.quantity}</span>
+                <span className="text-muted-foreground truncate pr-2">{item.name} (${item.selectedVariant.size}) x {item.quantity}</span>
                 <span className="font-medium text-foreground whitespace-nowrap">${(item.selectedVariant.price * item.quantity).toLocaleString('es-CO')}</span>
               </div>
             ))}
