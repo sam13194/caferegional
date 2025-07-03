@@ -16,10 +16,12 @@ export interface Product {
   description?: string;
   rating?: number;
   roastType?: string[];
+  flavorProfile?: string[];
   longDescription?: string;
   originDetails?: string;
   processDetails?: string;
   preparationRecommendations?: string;
+  intensity?: number;
 }
 
 export interface ProductVariant {
