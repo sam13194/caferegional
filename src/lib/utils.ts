@@ -8,6 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 
 // Helper function to generate a URL-friendly slug
 const generateSlug = (name: string): string => {
+  if (!name) return '';
   const a = 'àáâäæãåāăąçćčđďèéêëēėęěğǵḧîïíīįìłḿñńǹňôöòóœøōõőṕŕřßśšşșťțûüùúūǘůűųẃẍÿýžźż·/_,:;'
   const b = 'aaaaaaaaaacccddeeeeeeeegghiiiiiilmnnnnoooooooooprrsssssttuuuuuuuuuwxyyzzz------'
   const p = new RegExp(a.split('').join('|'), 'g')
@@ -43,14 +44,15 @@ export function groupProductsByVariant(rawProducts: { [key: string]: any }): Pro
     const p = rawProducts[dbKey];
     if (!p || !p.name) continue; // Skip malformed entries
 
-    const groupKey = p.name;
+    const slug = generateSlug(p.name);
+    if (!slug) continue; // Skip if slug is empty
+    const groupKey = slug; // Group by slug instead of by name
 
     if (!productGroups[groupKey]) {
-      const slug = generateSlug(groupKey);
       productGroups[groupKey] = {
-        id: slug,
+        id: slug, // ID is now the slug, which is the group key. Guaranteed unique.
         slug: slug,
-        name: groupKey,
+        name: p.name, // Use the name of the first product encountered for this group
         variants: [],
         allImages: new Set(),
         allObservations: new Set(),
