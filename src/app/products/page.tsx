@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { rtdb } from '@/lib/firebase/config';
 import { ref, get } from 'firebase/database';
 import { Product } from '@/types';
+import { groupProductsByVariant } from '@/lib/utils';
 
 // Force dynamic rendering to fetch fresh data on each request.
 export const dynamic = 'force-dynamic';
@@ -17,8 +18,8 @@ async function getProducts() {
   const productsRef = ref(rtdb, 'products');
   const snapshot = await get(productsRef);
   if (snapshot.exists()) {
-    // Convert the products object into an array
-    return Object.values(snapshot.val()) as Product[];
+    // Convert the products object into an array of grouped products
+    return groupProductsByVariant(snapshot.val());
   }
   return [];
 }
@@ -27,8 +28,6 @@ async function getProducts() {
 export default async function ProductsPage() {
   const liveProducts = await getProducts();
   const intensityLevels = [1, 2, 3, 4, 5];
-  // The flavorProfile does not exist in the new Product structure, so this will be commented out.
-  // const flavorProfiles = Array.from(new Set(liveProducts.flatMap(p => p.flavorProfile)));
 
   return (
     <div className="flex flex-col md:flex-row gap-8">
@@ -59,7 +58,7 @@ export default async function ProductsPage() {
           </div>
         </div>
 
-        {/* Intensity Filter */}
+        {/* Intensity Filter - Placeholder */}
         <div>
           <h3 className="font-semibold mb-2 text-foreground">Intensidad</h3>
           <div className="flex justify-between">
@@ -71,21 +70,6 @@ export default async function ProductsPage() {
           </div>
         </div>
         
-        {/* Flavor Profile Filter - Commented out as it's not in the new data */}
-        {/*
-        <div>
-          <h3 className="font-semibold mb-2 text-foreground">Notas de Cata</h3>
-          <div className="space-y-2">
-            {flavorProfiles.slice(0, 5).map(profile => (
-              <div key={profile} className="flex items-center space-x-2">
-                <Checkbox id={`flavor-${profile.toLowerCase()}`} />
-                <Label htmlFor={`flavor-${profile.toLowerCase()}`} className="text-sm font-normal">{profile}</Label>
-              </div>
-            ))}
-          </div>
-        </div>
-        */}
-
         <Button className="w-full mt-4">Aplicar Filtros</Button>
         <Button variant="outline" className="w-full mt-2">Limpiar Filtros</Button>
 

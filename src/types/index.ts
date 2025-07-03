@@ -1,24 +1,20 @@
 
 export interface Product {
-  id: string;
+  id: string; // Will be a slug, e.g., 'cafe-ragonvalia'
+  slug: string;
   name: string;
-  description?: string;
-  price: number;
-  stock: number;
-  category: string;
+  origin: string;
   images: string[];
-  slug?: string;
-  origin?: string;
-  variants?: ProductVariant[];
-  rating?: number;
+  variants: ProductVariant[];
+  stock: number; // Total stock of all variants
+  category: string;
   featured?: boolean;
   active?: boolean;
   createdAt?: string | Date;
   observations?: string;
-  packaging?: string;
-  weight?: string;
-  intensity?: number;
-  flavorProfile?: string[];
+  price: number; // Base price of the first variant
+  description?: string;
+  rating?: number;
   roastType?: string[];
   longDescription?: string;
   originDetails?: string;
@@ -27,9 +23,11 @@ export interface Product {
 }
 
 export interface ProductVariant {
-  size: string;
+  id: string; // The original DB key, e.g., 'cafe_ragonvalia_125g'
+  size: string; // Corresponds to 'weight' from DB
   price: number;
-  stock?: number; // Stock can be at the variant level
+  stock: number;
+  packaging: string;
 }
 
 export interface Region {
@@ -51,11 +49,10 @@ export interface Testimonial {
   coffeeReviewed?: string;
 }
 
-export interface CartItem extends Product {
+export interface CartItem extends Omit<Product, 'variants' | 'stock'> {
   quantity: number;
   selectedVariant: ProductVariant;
-  // Make region optional as it may not exist in all product contexts
-  region?: string;
+  stock: number; // Stock of the selected variant
 }
 
 // Declaración global para el widget de Cloudinary

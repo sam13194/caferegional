@@ -1,3 +1,4 @@
+
 "use client";
 
 import type { Product, ProductVariant } from '@/types';
@@ -21,13 +22,24 @@ export default function ProductPurchaseOptions({ product, onPriceChange }: Produ
   const { toast } = useToast();
 
   useEffect(() => {
+    // Set the first variant as default when the product changes
+    if (product.variants && product.variants.length > 0) {
+      const defaultVariant = product.variants[0];
+      setSelectedVariant(defaultVariant);
+      onPriceChange(defaultVariant.price);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product]);
+
+  useEffect(() => {
     if (selectedVariant) {
       onPriceChange(selectedVariant.price);
+      setQuantity(1); // Reset quantity when variant changes
     }
   }, [selectedVariant, onPriceChange]);
 
-  const handleVariantChange = (variantSize: string) => {
-    const variant = product.variants.find(v => v.size === variantSize);
+  const handleVariantChange = (variantId: string) => {
+    const variant = product.variants.find(v => v.id === variantId);
     if (variant) {
       setSelectedVariant(variant);
     }
@@ -37,25 +49,25 @@ export default function ProductPurchaseOptions({ product, onPriceChange }: Produ
     setQuantity(prev => {
       const newQuantity = prev + amount;
       if (newQuantity < 1) return 1;
-      if (newQuantity > product.stock) return product.stock;
+      if (newQuantity > selectedVariant.stock) return selectedVariant.stock;
       return newQuantity;
     });
   };
 
   const handleAddToCart = () => {
-    if (product.stock < quantity ) {
+    if (selectedVariant.stock < quantity ) {
         toast({
             title: "Stock insuficiente",
-            description: `Solo quedan ${product.stock} unidades de ${product.name}.`,
+            description: `Solo quedan ${selectedVariant.stock} unidades de ${product.name} (${selectedVariant.size}).`,
             variant: "destructive",
         });
-        setQuantity(product.stock);
+        setQuantity(selectedVariant.stock);
         return;
     }
-    if (product.stock === 0) {
+    if (selectedVariant.stock === 0) {
         toast({
             title: "Producto Agotado",
-            description: `${product.name} está actualmente agotado.`,
+            description: `${product.name} (${selectedVariant.size}) está actualmente agotado.`,
             variant: "destructive",
         });
         return;
@@ -73,21 +85,24 @@ export default function ProductPurchaseOptions({ product, onPriceChange }: Produ
         description: "Añadir a la lista de deseos estará disponible pronto.",
     });
   };
+  
+  const currentStock = selectedVariant?.stock || 0;
 
   return (
     <div className="space-y-6">
       {/* Variant (Size) Options */}
-      {product.variants && product.variants.length > 1 && (
+      {product.variants && product.variants.length > 0 && (
         <div>
-          <label htmlFor="variant-select" className="block text-sm font-medium text-foreground mb-1">Tamaño:</label>
-          <Select value={selectedVariant.size} onValueChange={handleVariantChange}>
+          <label htmlFor="variant-select" className="block text-sm font-medium text-foreground mb-1">Presentación:</label>
+          <Select value={selectedVariant?.id} onValueChange={handleVariantChange}>
             <SelectTrigger id="variant-select" className="w-full md:w-2/3 bg-background">
-              <SelectValue placeholder="Selecciona un tamaño" />
+              <SelectValue placeholder="Selecciona una presentación" />
             </SelectTrigger>
             <SelectContent>
               {product.variants.map(variant => (
-                <SelectItem key={variant.size} value={variant.size}>
-                  {variant.size} - ${variant.price.toLocaleString('es-CO')}
+                <SelectItem key={variant.id} value={variant.id} disabled={variant.stock === 0}>
+                  {variant.size} ({variant.packaging}) - ${variant.price.toLocaleString('es-CO')}
+                  {variant.stock === 0 && ' (Agotado)'}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -110,11 +125,11 @@ export default function ProductPurchaseOptions({ product, onPriceChange }: Produ
             className="w-12 h-8 text-center border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
             aria-label="Cantidad"
           />
-          <Button variant="ghost" size="icon" onClick={() => handleQuantityChange(1)} disabled={quantity >= product.stock}>
+          <Button variant="ghost" size="icon" onClick={() => handleQuantityChange(1)} disabled={quantity >= currentStock}>
             <Plus className="h-4 w-4" />
           </Button>
         </div>
-        {product.stock < 5 && product.stock > 0 && <p className="text-xs text-destructive mt-1">¡Solo quedan {product.stock} unidades!</p>}
+        {currentStock < 5 && currentStock > 0 && <p className="text-xs text-destructive mt-1">¡Solo quedan {currentStock} unidades!</p>}
       </div>
 
       {/* Action Buttons */}
@@ -122,10 +137,10 @@ export default function ProductPurchaseOptions({ product, onPriceChange }: Produ
         <Button 
           size="lg" 
           onClick={handleAddToCart} 
-          disabled={product.stock === 0}
+          disabled={currentStock === 0}
           className="flex-grow"
         >
-          <ShoppingCart className="mr-2 h-5 w-5" /> {product.stock === 0 ? 'Agotado' : 'Añadir al Carrito'}
+          <ShoppingCart className="mr-2 h-5 w-5" /> {currentStock === 0 ? 'Agotado' : 'Añadir al Carrito'}
         </Button>
         <Button size="lg" variant="outline" onClick={handleWishlist} className="flex-grow">
           <Heart className="mr-2 h-5 w-5" /> Añadir a Lista de Deseos

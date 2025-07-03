@@ -4,33 +4,32 @@ import ProductClientPage from '@/components/products/ProductClientPage';
 import { rtdb } from '@/lib/firebase/config';
 import { ref, get } from 'firebase/database';
 import type { Product } from '@/types';
+import { groupProductsByVariant } from '@/lib/utils';
 
 // Force dynamic rendering to ensure data is fetched on each request
 export const dynamic = 'force-dynamic';
 
-async function getProductsFromFirebase(): Promise<Product[]> {
+async function getProductBySlug(slug: string): Promise<Product | undefined> {
     const productsRef = ref(rtdb, 'products');
     const snapshot = await get(productsRef);
     if (snapshot.exists()) {
-        const productsObject = snapshot.val();
-        return Object.values(productsObject || {}).filter(p => p) as Product[];
+        const groupedProducts = groupProductsByVariant(snapshot.val());
+        return groupedProducts.find(p => p.slug === slug);
     }
-    return [];
+    return undefined;
 }
-
-async function findProductBySlug(slug: string): Promise<Product | undefined> {
-    const products = await getProductsFromFirebase();
-    return products.find(p => p.slug === slug);
-}
-
-// generateStaticParams has been removed to switch from static to dynamic rendering.
 
 export default async function ProductPage({ params }: { params: { slug: string } }) {
-  const product = await findProductBySlug(params.slug);
+  const product = await getProductBySlug(params.slug);
 
   if (!product) {
     notFound();
   }
 
-  return <ProductClientPage initialProduct={product} />;
+  // Fetch all products to pass for "related products" section
+  const productsRef = ref(rtdb, 'products');
+  const allProductsSnapshot = await get(productsRef);
+  const allProducts = allProductsSnapshot.exists() ? groupProductsByVariant(allProductsSnapshot.val()) : [];
+
+  return <ProductClientPage initialProduct={product} allProducts={allProducts} />;
 }

@@ -1,3 +1,4 @@
+
 "use client";
 
 import type { CartItem, Product, ProductVariant } from '@/types';
@@ -46,28 +47,22 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const addToCart = (product: Product, quantity: number, selectedVariant: ProductVariant) => {
     setCart(prevCart => {
-      // A unique ID for a cart item is the product ID plus the variant size
-      const cartItemId = `${product.id}-${selectedVariant.size}`;
-      const existingItemIndex = prevCart.findIndex(item => `${item.id}-${item.selectedVariant.size}` === cartItemId);
+      const cartItemId = selectedVariant.id; // Use the variant's unique ID
+      const existingItemIndex = prevCart.findIndex(item => item.selectedVariant.id === cartItemId);
 
       if (existingItemIndex > -1) {
         const updatedCart = [...prevCart];
         const existingItem = updatedCart[existingItemIndex];
-        existingItem.quantity += quantity;
-        if (existingItem.quantity > product.stock) {
-             existingItem.quantity = product.stock; // Cap at stock
-        }
+        const newQuantity = existingItem.quantity + quantity;
+        existingItem.quantity = Math.min(newQuantity, existingItem.stock); // Cap at stock
         return updatedCart;
       } else {
+        const { variants, stock, ...productBase } = product;
         const newCartItem: CartItem = {
-          id: product.id,
-          name: product.name,
-          slug: product.slug,
-          image: product.images[0],
-          region: product.region,
-          stock: product.stock,
-          quantity: Math.min(quantity, product.stock),
+          ...productBase,
+          quantity: Math.min(quantity, selectedVariant.stock),
           selectedVariant: selectedVariant,
+          stock: selectedVariant.stock,
         };
         return [...prevCart, newCartItem];
       }
@@ -75,15 +70,15 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const removeFromCart = (cartItemId: string) => {
-    setCart(prevCart => prevCart.filter(item => `${item.id}-${item.selectedVariant.size}` !== cartItemId));
+    setCart(prevCart => prevCart.filter(item => item.selectedVariant.id !== cartItemId));
   };
 
   const updateQuantity = (cartItemId: string, quantity: number) => {
     setCart(prevCart =>
       prevCart.map(item => {
-        const currentCartId = `${item.id}-${item.selectedVariant.size}`;
-        if (currentCartId === cartItemId) {
-          return { ...item, quantity: Math.max(0, Math.min(quantity, item.stock)) }
+        if (item.selectedVariant.id === cartItemId) {
+          const newQuantity = Math.max(0, Math.min(quantity, item.stock));
+          return { ...item, quantity: newQuantity };
         }
         return item;
       }).filter(item => item.quantity > 0) // Remove if quantity is 0

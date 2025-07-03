@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from 'next/image';
@@ -32,18 +33,18 @@ export default function CartPage() {
         {/* Cart Items */}
         <div className="lg:col-span-2 space-y-6">
           {cart.map(item => {
-            const cartItemId = `${item.id}-${item.selectedVariant.size}`;
+            const cartItemId = item.selectedVariant.id; // Use variant's unique ID
             return (
               <div key={cartItemId} className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 border rounded-lg bg-card shadow-sm">
                 <div className="relative w-24 h-24 sm:w-20 sm:h-20 rounded-md overflow-hidden shrink-0 bg-muted">
-                  <Image src={item.image} alt={item.name} layout="fill" objectFit="cover" data-ai-hint="coffee product bag" />
+                  <Image src={item.images[0]} alt={item.name} layout="fill" objectFit="cover" data-ai-hint="coffee product bag" />
                 </div>
                 <div className="flex-grow">
                   <Link href={`/products/${item.slug}`} className="hover:underline">
                     <h2 className="text-lg font-semibold text-foreground">{item.name}</h2>
                   </Link>
-                  <p className="text-sm text-muted-foreground">{item.region}</p>
-                  <p className="text-xs text-muted-foreground">Tamaño: {item.selectedVariant.size}</p>
+                  <p className="text-sm text-muted-foreground">{item.origin}</p>
+                  <p className="text-xs text-muted-foreground">Presentación: {item.selectedVariant.size}</p>
                   <p className="text-sm font-medium text-primary mt-1 sm:hidden">${item.selectedVariant.price.toLocaleString('es-CO')}</p>
                 </div>
                 <div className="flex items-center gap-2 w-max border rounded-md p-1">

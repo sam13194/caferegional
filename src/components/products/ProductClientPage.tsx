@@ -1,7 +1,7 @@
+
 "use client";
 
 import Image from 'next/image';
-import { products } from '@/data/products';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Star, MessageCircle, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -13,27 +13,41 @@ import type { Product } from '@/types';
 
 interface ProductClientPageProps {
   initialProduct: Product;
+  allProducts: Product[]; // Pass all products for related items
 }
 
-export default function ProductClientPage({ initialProduct }: ProductClientPageProps) {
+export default function ProductClientPage({ initialProduct, allProducts }: ProductClientPageProps) {
   const [product, setProduct] = useState<Product | null>(initialProduct);
   const [displayPrice, setDisplayPrice] = useState<number>(initialProduct.variants[0]?.price ?? initialProduct.price);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     setProduct(initialProduct);
     setDisplayPrice(initialProduct.variants[0]?.price ?? initialProduct.price);
+    setCurrentImageIndex(0);
   }, [initialProduct]);
 
   if (!product) {
     return <div className="text-center py-10">Producto no encontrado o cargando...</div>;
   }
 
-  const relatedProducts = products.filter(p => p.region === product.region && p.id !== product.id).slice(0, 3);
+  const relatedProducts = allProducts.filter(p => p.origin === product.origin && p.id !== product.id).slice(0, 3);
+  const totalStock = product.variants.reduce((sum, v) => sum + v.stock, 0);
 
   const reviews = [
     { id: '1', userName: 'Carlos M.', rating: 5, comment: '¡Excelente café, aroma y sabor inigualables!', date: '2024-07-15' },
     { id: '2', userName: 'Lucía F.', rating: 4, comment: 'Muy bueno, aunque esperaba un poco más de intensidad.', date: '2024-07-10' },
   ];
+
+  const handleImageNavigation = (direction: 'next' | 'prev') => {
+    setCurrentImageIndex(prev => {
+      if (direction === 'next') {
+        return (prev + 1) % product.images.length;
+      } else {
+        return (prev - 1 + product.images.length) % product.images.length;
+      }
+    });
+  };
 
   return (
     <div className="space-y-12">
@@ -42,21 +56,24 @@ export default function ProductClientPage({ initialProduct }: ProductClientPageP
         <div className="space-y-4">
           <div className="relative aspect-square rounded-lg overflow-hidden shadow-lg bg-muted">
             <Image 
-              src={product.images[0]} 
+              src={product.images[currentImageIndex]} 
               alt={product.name} 
               layout="fill" 
               objectFit="cover"
               data-ai-hint="coffee product detail"
+              key={currentImageIndex} // Force re-render for transition
             />
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
-              <Button variant="outline" size="icon" className="bg-background/70 hover:bg-background"><ChevronLeft size={18}/></Button>
-              <Button variant="outline" size="icon" className="bg-background/70 hover:bg-background"><ChevronRight size={18}/></Button>
-            </div>
+            {product.images.length > 1 && (
+                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+                    <Button variant="outline" size="icon" className="bg-background/70 hover:bg-background" onClick={() => handleImageNavigation('prev')}><ChevronLeft size={18}/></Button>
+                    <Button variant="outline" size="icon" className="bg-background/70 hover:bg-background" onClick={() => handleImageNavigation('next')}><ChevronRight size={18}/></Button>
+                </div>
+            )}
           </div>
           {product.images && product.images.length > 1 && (
             <div className="grid grid-cols-4 gap-2">
-              {product.images.slice(0, 4).map((img, idx) => (
-                <div key={idx} className="relative aspect-square rounded overflow-hidden border hover:border-primary cursor-pointer">
+              {product.images.map((img, idx) => (
+                <div key={idx} className={`relative aspect-square rounded overflow-hidden border-2 cursor-pointer ${idx === currentImageIndex ? 'border-primary' : 'border-transparent'}`} onClick={() => setCurrentImageIndex(idx)}>
                   <Image src={img} alt={`${product.name} thumbnail ${idx + 1}`} layout="fill" objectFit="cover" data-ai-hint="coffee product variant" />
                 </div>
               ))}
@@ -78,42 +95,31 @@ export default function ProductClientPage({ initialProduct }: ProductClientPageP
             )}
           </div>
           <p className="text-2xl font-semibold text-foreground">${displayPrice.toLocaleString('es-CO')}</p>
-          <p className="text-muted-foreground leading-relaxed">{product.description}</p>
+          <p className="text-muted-foreground leading-relaxed">{product.observations || 'Un café excepcional de las montañas de Colombia, cultivado con pasión y tradición.'}</p>
           
           <ProductPurchaseOptions product={product} onPriceChange={setDisplayPrice} />
 
           <div className="pt-4 border-t">
-            <p className="text-sm text-muted-foreground"><span className="font-semibold text-foreground">Región:</span> {product.region}</p>
-            <p className="text-sm text-muted-foreground"><span className="font-semibold text-foreground">Intensidad:</span> {product.intensity}/5</p>
-            <p className="text-sm text-muted-foreground"><span className="font-semibold text-foreground">Perfil de Sabor:</span> {product.flavorProfile.join(', ')}</p>
-            <p className="text-sm text-muted-foreground"><span className="font-semibold text-foreground">Stock:</span> {product.stock > 0 ? `${product.stock} unidades disponibles` : 'Agotado'}</p>
+            <p className="text-sm text-muted-foreground"><span className="font-semibold text-foreground">Origen:</span> {product.origin}</p>
+            <p className="text-sm text-muted-foreground"><span className="font-semibold text-foreground">Stock Total:</span> {totalStock > 0 ? `${totalStock} unidades disponibles` : 'Agotado'}</p>
+            {product.category && <p className="text-sm text-muted-foreground"><span className="font-semibold text-foreground">Categoría:</span> {product.category}</p>}
           </div>
         </div>
       </section>
 
       {/* Detailed Info Tabs */}
-      <Tabs defaultValue="origen" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 md:grid-cols-4 bg-muted p-1 rounded-lg">
-          <TabsTrigger value="origen">Origen y Finca</TabsTrigger>
-          <TabsTrigger value="proceso">Proceso</TabsTrigger>
-          <TabsTrigger value="notas">Notas de Cata</TabsTrigger>
-          <TabsTrigger value="preparacion" className="hidden md:inline-flex">Recomendaciones</TabsTrigger>
+      <Tabs defaultValue="descripcion" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 bg-muted p-1 rounded-lg">
+          <TabsTrigger value="descripcion">Descripción</TabsTrigger>
+          <TabsTrigger value="detalles">Detalles</TabsTrigger>
         </TabsList>
-        <TabsContent value="origen" className="py-6 px-1 text-sm leading-relaxed prose max-w-none">
-            <h3 className="font-lora text-xl font-semibold mb-2">Origen y Finca</h3>
-            <p>{product.originDetails || 'Información detallada sobre el origen y la finca productora de este café excepcional.'}</p>
+        <TabsContent value="descripcion" className="py-6 px-1 text-sm leading-relaxed prose max-w-none">
+            <h3 className="font-lora text-xl font-semibold mb-2">Descripción del Café</h3>
+            <p>{product.longDescription || product.observations || 'Descubre el perfil de sabor completo: aroma, cuerpo, acidez y sabor residual que caracterizan este café.'}</p>
         </TabsContent>
-        <TabsContent value="proceso" className="py-6 px-1 text-sm leading-relaxed prose max-w-none">
-            <h3 className="font-lora text-xl font-semibold mb-2">Proceso</h3>
+        <TabsContent value="detalles" className="py-6 px-1 text-sm leading-relaxed prose max-w-none">
+            <h3 className="font-lora text-xl font-semibold mb-2">Detalles del Producto</h3>
             <p>{product.processDetails || 'Conoce más sobre el cuidadoso proceso de beneficio y secado que atraviesan nuestros granos.'}</p>
-        </TabsContent>
-        <TabsContent value="notas" className="py-6 px-1 text-sm leading-relaxed prose max-w-none">
-            <h3 className="font-lora text-xl font-semibold mb-2">Notas de Cata</h3>
-            <p>{product.longDescription || 'Descubre el perfil de sabor completo: aroma, cuerpo, acidez y sabor residual que caracterizan este café.'}</p>
-        </TabsContent>
-        <TabsContent value="preparacion" className="py-6 px-1 text-sm leading-relaxed prose max-w-none">
-            <h3 className="font-lora text-xl font-semibold mb-2">Recomendaciones de Preparación</h3>
-            <p>{product.preparationRecommendations || 'Te sugerimos los mejores métodos para extraer todo el potencial de este café en casa.'}</p>
         </TabsContent>
       </Tabs>
 
@@ -144,8 +150,7 @@ export default function ProductClientPage({ initialProduct }: ProductClientPageP
         <h2 className="font-lora text-2xl font-bold mb-6 text-primary text-center">Te podría interesar también...</h2>
         <CoffeeRecommender 
           currentProduct={product} 
-          userPurchaseHistory={products.slice(0,2).map(p => p.name).join(', ')} 
-          userPreferences={`Le gustan los cafés de la región ${product.region} con intensidad ${product.intensity > 3 ? 'alta' : 'media-baja'}.`}
+          userPreferences={`Le gustan los cafés de la región ${product.origin}.`}
         />
       </section>
 
