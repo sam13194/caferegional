@@ -5,6 +5,7 @@ import Footer from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/toaster";
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext"; // Importar el nuevo AuthProvider
+import ConfigDebug from '@/components/debug/ConfigDebug'; // Añadir import
 import Script from 'next/script';
 
 const lora = Lora({
@@ -18,7 +19,6 @@ const openSans = Open_Sans({
   display: "swap",
   variable: "--font-open-sans",
 });
-
 
 export const metadata = {
   title: "CafeRegional - Café de Origen de Norte de Santander",
@@ -44,6 +44,7 @@ export default function RootLayout({
             </main>
             <Footer />
             <Toaster />
+            <ConfigDebug /> {/* Componente temporal para debug */}
           </CartProvider>
         </AuthProvider>
         <Script 
