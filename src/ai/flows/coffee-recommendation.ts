@@ -54,6 +54,13 @@ const coffeeRecommendationFlow = ai.defineFlow(
     outputSchema: CoffeeRecommendationOutputSchema,
   },
   async input => {
+    if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'YOUR_API_KEY_HERE') {
+      console.warn("GEMINI_API_KEY is not set or is a placeholder. Skipping AI recommendation.");
+      return {
+          recommendedCoffees: "No disponible",
+          reasoning: "El servicio de recomendación IA no está configurado. Por favor, contacta al administrador del sitio."
+      };
+    }
     const {output} = await coffeeRecommendationPrompt(input);
     return output!;
   }

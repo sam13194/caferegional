@@ -28,7 +28,7 @@ export default function CoffeeRecommender({ currentProduct, userPurchaseHistory,
         history = history ? `${history}, ${currentProduct.name}` : currentProduct.name;
     }
     
-    const preferences = userPreferences || (currentProduct ? `Interesado en cafés similares a ${currentProduct.name} de la región ${currentProduct.region}.` : "Busca cafés colombianos de alta calidad.");
+    const preferences = userPreferences || (currentProduct ? `Interesado en cafés similares a ${currentProduct.name} de la región ${currentProduct.origin}.` : "Busca cafés colombianos de alta calidad.");
 
     const input: CoffeeRecommendationInput = {
       userPurchaseHistory: history,
@@ -81,6 +81,12 @@ export default function CoffeeRecommender({ currentProduct, userPurchaseHistory,
           </div>
         )}
         {recommendation && !isLoading && !error && (
+          recommendation.recommendedCoffees === "No disponible" ? (
+            <div className="flex items-center text-muted-foreground text-sm">
+                <AlertTriangle className="h-5 w-5 mr-2 text-amber-500" />
+                <p>{recommendation.reasoning}</p>
+            </div>
+          ) : (
           <div className="space-y-3">
             <div>
               <h4 className="font-semibold text-foreground">Cafés Recomendados:</h4>
@@ -95,6 +101,7 @@ export default function CoffeeRecommender({ currentProduct, userPurchaseHistory,
               <p className="text-sm text-muted-foreground italic">{recommendation.reasoning}</p>
             </div>
           </div>
+          )
         )}
         {(!isLoading && !recommendation && !error) && (
              <div className="text-center py-4">
