@@ -7,10 +7,15 @@ import type { Product } from '@/types';
 
 async function getProductsFromFirebase(): Promise<Product[]> {
     const productsRef = ref(rtdb, 'products');
-    const snapshot = await get(productsRef);
-    if (snapshot.exists()) {
-        const productsObject = snapshot.val();
-        return Object.values(productsObject);
+    try {
+        const snapshot = await get(productsRef);
+        if (snapshot.exists()) {
+            const productsObject = snapshot.val();
+            // Ensure we return an array of products, filtering out any null/undefined entries
+            return Object.values(productsObject || {}).filter(p => p) as Product[];
+        }
+    } catch (error) {
+        console.error("Error fetching products from Firebase for build:", error);
     }
     return [];
 }
@@ -22,9 +27,13 @@ async function findProductBySlug(slug: string): Promise<Product | undefined> {
 
 export async function generateStaticParams() {
   const products = await getProductsFromFirebase();
-  return products.map((product) => ({
-    slug: product.slug,
-  }));
+  
+  return products
+    // Filter out products that don't have a valid slug property
+    .filter(product => product && typeof product.slug === 'string' && product.slug.length > 0)
+    .map((product) => ({
+      slug: product.slug,
+    }));
 }
 
 export default async function ProductPage({ params }: { params: { slug: string } }) {
