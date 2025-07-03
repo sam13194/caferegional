@@ -15,9 +15,41 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
-console.log("Firebase API Key during build:", process.env.NEXT_PUBLIC_FIREBASE_API_KEY);
+// Debug en desarrollo
+if (process.env.NODE_ENV === 'development') {
+  console.log("Firebase config:", firebaseConfig);
+}
 
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+// Verificar variables críticas
+const requiredVars = [
+  'NEXT_PUBLIC_FIREBASE_API_KEY',
+  'NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN',
+  'NEXT_PUBLIC_FIREBASE_PROJECT_ID',
+  'NEXT_PUBLIC_FIREBASE_APP_ID'
+];
+
+const missingVars = requiredVars.filter(varName => !process.env[varName]);
+if (missingVars.length > 0) {
+  console.error('Missing Firebase environment variables:', missingVars);
+  throw new Error(`Missing required Firebase environment variables: ${missingVars.join(', ')}`);
+}
+
+// Verificar que no sean strings vacías
+const emptyVars = requiredVars.filter(varName => !process.env[varName]?.trim());
+if (emptyVars.length > 0) {
+  console.error('Empty Firebase environment variables:', emptyVars);
+  throw new Error(`Empty Firebase environment variables: ${emptyVars.join(', ')}`);
+}
+
+let app;
+try {
+  app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+  console.log("Firebase app initialized successfully");
+} catch (error) {
+  console.error("Firebase initialization error:", error);
+  throw error;
+}
+
 const auth = getAuth(app);
 const db = getFirestore(app);
 const rtdb = getDatabase(app);
