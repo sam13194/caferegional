@@ -1,12 +1,11 @@
 "use client";
 
 import { useCart } from "@/context/CartContext";
-import { Button } from "@/components/ui/button";
+import WompiPaymentButton from "@/components/wompi/WompiPaymentButton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { CreditCard, Truck, Lock, Info } from "lucide-react";
-import Link from "next/link";
+import { Truck, Info } from "lucide-react";
 
 export default function CheckoutPage() {
   const { cart, getCartTotal } = useCart();
@@ -52,35 +51,6 @@ export default function CheckoutPage() {
               </div>
             </div>
           </section>
-
-          <Separator />
-
-          {/* Payment Method */}
-          <section>
-            <h2 className="font-lora text-xl font-semibold mb-4 text-primary flex items-center"><CreditCard className="mr-2 h-5 w-5"/>Método de Pago</h2>
-            {/* Placeholder for payment options. Actual integration with PayU, Stripe, etc. needed */}
-            <div className="space-y-2">
-              <div className="p-4 border rounded-md bg-background">
-                <Label className="flex items-center">
-                  <Input type="radio" name="paymentMethod" value="card" className="mr-2" defaultChecked />
-                  Tarjeta de Crédito/Débito
-                </Label>
-              </div>
-              <div className="p-4 border rounded-md bg-background">
-                <Label className="flex items-center">
-                  <Input type="radio" name="paymentMethod" value="pse" className="mr-2" />
-                  PSE (Pagos Seguros en Línea)
-                </Label>
-              </div>
-               <div className="p-4 border rounded-md bg-background">
-                <Label className="flex items-center">
-                  <Input type="radio" name="paymentMethod" value="transfer" className="mr-2" />
-                  Transferencia Bancaria
-                </Label>
-              </div>
-            </div>
-            <p className="text-xs text-muted-foreground mt-4 flex items-center"><Lock className="mr-1 h-3 w-3"/> Tus pagos son seguros y están encriptados.</p>
-          </section>
         </div>
 
         {/* Order Summary */}
@@ -116,9 +86,7 @@ export default function CheckoutPage() {
             <p>El costo del envío se paga directamente a la transportadora al momento de recibir tu pedido.</p>
           </div>
 
-          <Link href="/checkout/success" passHref className="block w-full">
-            <Button size="lg" className="w-full mt-4" disabled={cart.length === 0}>PAGAR AHORA</Button>
-          </Link>
+          <WompiPaymentButton />
         </div>
       </div>
     </div>
