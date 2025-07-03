@@ -4,40 +4,7 @@ import { Input } from "@/components/ui/input";
 import { ArrowRight, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
-// Mock blog posts
-const blogPosts = [
-  {
-    id: "1",
-    slug: "como-preparar-cafe-de-olla",
-    title: "El Secreto de la Abuela: Cómo Preparar un Auténtico Café de Olla",
-    excerpt: "Redescubre el sabor tradicional del campo con esta guía para preparar un café de olla especiado y reconfortante.",
-    imageUrl: "https://i.postimg.cc/5tLn50JG/image-6.png",
-    category: "Recetas Tradicionales",
-    date: "20 Julio, 2024",
-    author: "Equipo Café Regional",
-  },
-  {
-    id: "2",
-    slug: "ragonvalia-cafe-especialidad",
-    title: "Ragonvalia: El Pueblo que Conquistó al Mundo con su Café",
-    excerpt: "En el corazón de Norte de Santander, Colombia, un pequeño municipio llamado Ragonvalia está redefiniendo el panorama del café de especialidad...",
-    imageUrl: "https://i.postimg.cc/PfPSfhVB/cafe-ragonvalia.jpg",
-    category: "Orígenes del Café",
-    date: "25 Julio, 2024",
-    author: "Equipo Café Regional",
-  },
-  {
-    id: "3",
-    slug: "sostenibilidad-cultivo-cafe",
-    title: "Sostenibilidad en el Cultivo del Café: Nuestro Compromiso",
-    excerpt: "Conoce cómo en Café Regional trabajamos por un futuro más verde y justo para nuestros caficultores y el planeta...",
-    imageUrl: "https://i.postimg.cc/pdR2xmsY/DALL-E-2025-02-11-17-47-59-Create-a-coffee-label-design-featuring-the-name-CAF-REGIONAL-ARBOLEDA.webp",
-    category: "Sostenibilidad",
-    date: "10 Julio, 2024",
-    author: "Equipo Café Regional",
-  },
-];
+import { blogPosts } from "@/data/blog-posts"; // Import blogPosts from the new file
 
 const categories = ["Recetas Tradicionales", "Guías de Preparación", "Orígenes del Café", "Sostenibilidad", "Noticias de Café Regional"];
 
@@ -75,7 +42,7 @@ export default function BlogPage() {
                     <Link href={`/blog/${post.slug}`}>{post.title}</Link>
                   </CardTitle>
                   <CardDescription className="text-xs">
-                    Por {post.author} | {post.date} | <span className="text-primary">{post.category}</span>
+                    Por {post.author.name} | {post.date} | <span className="text-primary">{post.category}</span>
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="flex-grow">
