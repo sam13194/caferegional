@@ -5,17 +5,15 @@ import { rtdb } from '@/lib/firebase/config';
 import { ref, get } from 'firebase/database';
 import type { Product } from '@/types';
 
+// Force dynamic rendering to ensure data is fetched on each request
+export const dynamic = 'force-dynamic';
+
 async function getProductsFromFirebase(): Promise<Product[]> {
     const productsRef = ref(rtdb, 'products');
-    try {
-        const snapshot = await get(productsRef);
-        if (snapshot.exists()) {
-            const productsObject = snapshot.val();
-            // Ensure we return an array of products, filtering out any null/undefined entries
-            return Object.values(productsObject || {}).filter(p => p) as Product[];
-        }
-    } catch (error) {
-        console.error("Error fetching products from Firebase for build:", error);
+    const snapshot = await get(productsRef);
+    if (snapshot.exists()) {
+        const productsObject = snapshot.val();
+        return Object.values(productsObject || {}).filter(p => p) as Product[];
     }
     return [];
 }
@@ -25,16 +23,7 @@ async function findProductBySlug(slug: string): Promise<Product | undefined> {
     return products.find(p => p.slug === slug);
 }
 
-export async function generateStaticParams() {
-  const products = await getProductsFromFirebase();
-  
-  return products
-    // Filter out products that don't have a valid slug property
-    .filter(product => product && typeof product.slug === 'string' && product.slug.length > 0)
-    .map((product) => ({
-      slug: product.slug,
-    }));
-}
+// generateStaticParams has been removed to switch from static to dynamic rendering.
 
 export default async function ProductPage({ params }: { params: { slug: string } }) {
   const product = await findProductBySlug(params.slug);

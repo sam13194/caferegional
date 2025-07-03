@@ -1,3 +1,4 @@
+
 import ProductCard from '@/components/products/ProductCard';
 import { regions } from '@/data/regions';
 import { Checkbox } from "@/components/ui/checkbox";
@@ -8,6 +9,9 @@ import { Button } from '@/components/ui/button';
 import { rtdb } from '@/lib/firebase/config';
 import { ref, get } from 'firebase/database';
 import { Product } from '@/types';
+
+// Force dynamic rendering to fetch fresh data on each request.
+export const dynamic = 'force-dynamic';
 
 async function getProducts() {
   const productsRef = ref(rtdb, 'products');
