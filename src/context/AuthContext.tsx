@@ -7,11 +7,6 @@ import { ref, get } from 'firebase/database';
 import { auth, rtdb } from '@/lib/firebase/config';
 import { Loader2 } from 'lucide-react';
 
-// DEBUG: Log Firebase config on the client
-if (typeof window !== 'undefined') {
-  console.log("CLIENT-SIDE Firebase Auth Config:", auth.config);
-}
-
 type UserRole = 'admin' | 'employee' | 'customer' | null;
 
 // Extender el tipo User para incluir campos de nuestra DB
