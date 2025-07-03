@@ -1,14 +1,15 @@
+"use client";
+
+import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { CreditCard, Truck, Lock } from "lucide-react";
+import { CreditCard, Truck, Lock, Info } from "lucide-react";
 import Link from "next/link";
 
 export default function CheckoutPage() {
-  // In a real app, you'd get cart details from context or server
-  const mockCartTotal = 53000; // Example total
-  const mockShippingCost = 8000; // Example shipping
+  const { cart, getCartTotal } = useCart();
 
   return (
     <div className="container mx-auto py-8">
@@ -85,31 +86,38 @@ export default function CheckoutPage() {
         {/* Order Summary */}
         <div className="lg:col-span-1 p-6 bg-card rounded-lg shadow-sm space-y-4 self-start">
           <h2 className="font-lora text-xl font-semibold text-primary border-b pb-3">Resumen del Pedido</h2>
-          {/* Mock items - in real app, map through cart items */}
-          <div className="flex justify-between text-sm items-center">
-            <span className="text-muted-foreground">Café Excelso Ragonvalia (1kg) x 1</span>
-            <span className="font-medium text-foreground">$25.000</span>
+          
+          <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
+            {cart.map(item => (
+              <div key={item.selectedVariant.id} className="flex justify-between text-sm items-center">
+                <span className="text-muted-foreground truncate pr-2">{item.name} ({item.selectedVariant.size}) x {item.quantity}</span>
+                <span className="font-medium text-foreground whitespace-nowrap">${(item.selectedVariant.price * item.quantity).toLocaleString('es-CO')}</span>
+              </div>
+            ))}
           </div>
-          <div className="flex justify-between text-sm items-center">
-            <span className="text-muted-foreground">Café Premium Arboledas (500g) x 1</span>
-            <span className="font-medium text-foreground">$28.000</span>
-          </div>
+
           <Separator />
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Subtotal:</span>
-            <span className="font-medium text-foreground">${mockCartTotal.toLocaleString('es-CO')}</span>
+            <span className="font-medium text-foreground">${getCartTotal().toLocaleString('es-CO')}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Envío:</span>
-            <span className="font-medium text-foreground">${mockShippingCost.toLocaleString('es-CO')}</span>
+            <span className="font-medium text-foreground">Pago contraentrega</span>
           </div>
           <Separator />
           <div className="flex justify-between text-lg font-bold">
-            <span className="text-foreground">Total a Pagar:</span>
-            <span className="text-primary">${(mockCartTotal + mockShippingCost).toLocaleString('es-CO')}</span>
+            <span className="text-foreground">Total Productos:</span>
+            <span className="text-primary">${(getCartTotal()).toLocaleString('es-CO')}</span>
           </div>
+
+          <div className="flex items-start gap-2 p-3 text-xs bg-muted rounded-md border text-muted-foreground">
+            <Info className="h-4 w-4 shrink-0 mt-0.5" />
+            <p>El costo del envío se paga directamente a la transportadora al momento de recibir tu pedido.</p>
+          </div>
+
           <Link href="/checkout/success" passHref className="block w-full">
-            <Button size="lg" className="w-full mt-4">PAGAR AHORA</Button>
+            <Button size="lg" className="w-full mt-4" disabled={cart.length === 0}>PAGAR AHORA</Button>
           </Link>
         </div>
       </div>
