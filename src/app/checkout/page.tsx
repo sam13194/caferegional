@@ -16,7 +16,7 @@ const WhatsAppButton = () => {
     const cartDetails = cart.map(item => 
       `${item.name} (${item.selectedVariant.size}) x ${item.quantity} - $${(item.selectedVariant.price * item.quantity).toLocaleString('es-CO')}`
     ).join('
-');
+'); // Correctly escaped newline character
     
     const total = getCartTotal().toLocaleString('es-CO');
     
