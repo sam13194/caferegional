@@ -15,13 +15,12 @@ const WhatsAppButton = () => {
   const handleWhatsAppInquiry = () => {
     const cartDetails = cart.map(item => 
       `${item.name} (${item.selectedVariant.size}) x ${item.quantity} - $${(item.selectedVariant.price * item.quantity).toLocaleString('es-CO')}`
-    ).join('
-'); // Correctly escaped newline character
+    ).join('\n'); // Using correctly escaped newline for join
     
     const total = getCartTotal().toLocaleString('es-CO');
     
+    // Using template literal for the message to allow multi-line string
     const message = `¡Hola! Estoy interesado en los siguientes productos de Café de la Montaña:
-
 ${cartDetails}
 
 *Total: $${total}*
